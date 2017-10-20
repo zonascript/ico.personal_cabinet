@@ -1,0 +1,41 @@
+.button {
+  border-radius: 5px;
+  height: 2em;
+  text-align: center;
+  padding: 0 rem-calc(3);
+  min-width: 2em;
+  display: inline-block;
+
+  &.yellow-white {
+    border: 2px solid #ffb400;
+    background-color: #ffffff;
+    color: #4a4949;
+
+    &:hover {
+      background-color: #fff8e4;;
+    }
+
+    &:active {
+      background-color: #ffb400;
+    }
+
+    &.waves-effect {
+      &:active {
+        background-color: #fff8e4;
+      }
+    }
+  }
+
+  &.yellow {
+    background-color: #ffb400;
+    color: black;
+
+    &:hover {
+      //background-color: #ff9c00;
+    }
+  }
+}
+
+.action_button {
+
+}

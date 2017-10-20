@@ -1,0 +1,124 @@
+.row.w1280 {
+  //max-width: rem-calc(1280);
+  //margin-right: auto;
+  //margin-left: auto;
+
+  $gutters: (
+          small: 20px,
+          medium: 40px,
+          large: 40px,
+  );
+  @include flex-grid-row(null, rem-calc(1280), null, true, true, $gutters);
+
+  //@include flex-grid-row;
+
+  // Nesting behavior
+  & .row {
+    @include flex-grid-row(nest, false, null, true, true, $gutters);
+
+    &.collapse {
+      margin-right: 0;
+      margin-left: 0;
+    }
+  }
+
+  // Expanded row
+  &.expanded {
+    @include grid-row-size(expand);
+
+    .row {
+      margin-right: auto;
+      margin-left: auto;
+    }
+  }
+
+  &:not(.expanded) .row {
+    @include grid-row-size(expand);
+  }
+
+  &.collapse {
+    > .column {
+      @include grid-col-collapse;
+    }
+  }
+
+  // Undo negative margins
+  // From collapsed child
+  &.is-collapse-child,
+  &.collapse > .column > .row {
+    margin-right: 0;
+    margin-left: 0;
+  }
+
+  // Column
+  .column, .columns {
+    @include flex-grid-column(expand, $gutters);
+  }
+
+  @include -zf-each-breakpoint {
+    @for $i from 1 through $grid-column-count {
+      // Sizing (percentage)
+      .#{$-zf-size}-#{$i} {
+        flex: flex-grid-column($i);
+        max-width: grid-column($i);
+      }
+
+      // Offsets
+      $o: $i - 1;
+
+      .#{$-zf-size}-offset-#{$o} {
+        @include grid-column-offset($o);
+      }
+    }
+
+    // Block grid
+    @for $i from 1 through $block-grid-max {
+      .#{$-zf-size}-up-#{$i} {
+        @include flex-grid-layout($i);
+      }
+    }
+
+    @if $-zf-size != $-zf-zero-breakpoint {
+      // Sizing (expand)
+      @include breakpoint($-zf-size) {
+        .#{$-zf-size}-expand {
+          flex: flex-grid-column();
+        }
+      }
+
+      // Auto-stacking/unstacking
+      @at-root (without: media) {
+        .row.#{$-zf-size}-unstack {
+          > .column {
+            flex: flex-grid-column(100%);
+
+            @include breakpoint($-zf-size) {
+              flex: flex-grid-column();
+            }
+          }
+        }
+      }
+    }
+
+    // Responsive collapsing
+    .#{$-zf-size}-collapse {
+      > .column { @include grid-col-collapse; }
+    }
+
+    .#{$-zf-size}-uncollapse {
+      > .column { @include grid-col-gutter($-zf-size, $gutters); }
+    }
+  }
+
+  // Sizing (shrink)
+  .shrink {
+    flex: flex-grid-column(shrink);
+    max-width: 100%;
+  }
+
+  // Block grid columns
+  .column-block {
+    @include grid-column-margin(auto, $gutters);
+  }
+
+}

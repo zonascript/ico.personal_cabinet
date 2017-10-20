@@ -1,0 +1,49 @@
+$loader-color: #27a3e5;
+//$loader-color: rgba(#27a3e5, .5);
+
+
+img {
+  &.lazy {
+    transition: opacity 1s;
+    opacity: 0;
+
+    min-width: 100px !important;
+    min-height: 100px !important;
+
+    background: {
+      position: center center;
+      repeat: no-repeat;
+      size: contain;
+      //image: url("../images/s3logo.png");
+    };
+
+    &.lazy-img {
+      opacity: 0;
+      text-indent: -9999px;
+      display: inline-block;
+      filter: grayscale(100%);
+    }
+
+    &.lazy-bg {
+      transition: background 1s;
+    }
+
+    &.lazy-bg-loaded {
+
+    }
+
+    &.lazy-loaded {
+      min-width: inherit !important;
+      min-height: inherit !important;
+      opacity: 1;
+    }
+  }
+}
+
+.loading {
+  .loader-bg {
+    background: {
+      color: rgba(255, 255, 255, .9);
+    };
+  }
+}

@@ -1,0 +1,68 @@
+form {
+  .color-red {
+    @include breakpoint(medium up) {
+      font-size: rem-calc(18);
+    }
+  }
+
+  .info-field {
+    color: #4a4949;
+    font-size: 12px;
+    font-weight: 500;
+    margin-bottom: rem-calc(10);
+  }
+
+  .form-field {
+
+    margin-bottom: rem-calc(10);
+
+    .title-column {
+      font-weight: 500;
+      font-size: rem-calc(14);
+
+      @include breakpoint(medium up) {
+        text-align: right;
+      }
+
+      p {
+        margin: 0;
+        line-height: 1;
+      }
+
+      label {
+        display: inline-block;
+      }
+
+      .hint,
+      .form-hint-text,
+      .optional {
+        color: #777;
+        font-size: rem-calc(12);
+      }
+    }
+
+    .input-column {
+      textarea {
+        min-height: 4em;
+      }
+
+      textarea,
+      input {
+        padding: 0 rem-calc(10);
+        width: rem-calc(255);
+        border: 1px solid #aaa;
+        line-height: rem-calc(24);
+
+        @include placeholder() {
+          color: #969696;
+          font-size: rem-calc(14);
+          font-style: italic;
+        }
+
+        &.invalid {
+          border-color: #ff8d91;
+        }
+      }
+    }
+  }
+}

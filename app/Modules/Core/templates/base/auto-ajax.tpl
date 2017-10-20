@@ -1,0 +1,1 @@
+{extends $.request->getIsAjax() ? 'ajax.tpl' : 'base.tpl'}

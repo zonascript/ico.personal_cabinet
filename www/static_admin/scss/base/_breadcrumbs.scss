@@ -1,0 +1,22 @@
+.breadcrumbs-block {
+  padding: $main-block-padding-height $main-block-padding-width $main-block-padding-height;
+
+  ul {
+    font-size: 14px;
+
+    li {
+      display: inline-block;
+
+      a {
+        text-decoration: none;
+        color: #000;
+      }
+
+      &:last-child {
+        &, a {
+          color: #7E8794;
+        }
+      }
+    }
+  }
+}

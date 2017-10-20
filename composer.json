@@ -1,0 +1,73 @@
+{
+    "config": {
+        "vendor-dir": "app/vendors/components",
+        "platform": {
+            "php": "7.0.8"
+        }
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/tsukasa-mixer/QueryBuilder"
+        }
+    ],
+    "require": {
+        "mindy/query_builder": "dev-master_5.4",
+        "fenom/fenom": "^2.11",
+        "paypal/rest-api-sdk-php": "*",
+        "symfony/validator": "^2.8",
+        "true/punycode": "^2.1",
+        "mobiledetect/mobiledetectlib": "^2.8",
+        "league/flysystem": "^1.0",
+        "symfony/http-foundation": "^2.8",
+        "monolog/monolog": "^1.22",
+        "jaybizzle/crawler-detect": "^1.2",
+        "symfony/form": "^2.8",
+        "symfony/security-csrf": "^2.8",
+        "cocur/slugify": "^1.4",
+        "swiftmailer/swiftmailer": "^5.4",
+        "imagine/imagine": "^0.7.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Xcart\\": "app/vendors/Xcart",
+            "Modules\\": "app/Modules"
+        },
+        "files": [
+            "app/vendors/func/func.core.php",
+            "app/vendors/func/func.backoffice.php",
+            "app/vendors/func/func.cart.php",
+            "app/vendors/func/func.category.php",
+            "app/vendors/func/func.clean_urls.php",
+            "app/vendors/func/func.crypt.php",
+            "app/vendors/func/func.db.php",
+            "app/vendors/func/func.debug.php",
+            "app/vendors/func/func.export.php",
+            "app/vendors/func/func.files.php",
+            "app/vendors/func/func.fraud.php",
+            "app/vendors/func/func.froogle.php",
+            "app/vendors/func/func.gd.php",
+            "app/vendors/func/func.http.php",
+            "app/vendors/func/func.https_curl.php",
+            "app/vendors/func/func.https_httpscli.php",
+            "app/vendors/func/func.https_libcurl.php",
+            "app/vendors/func/func.https_openssl.php",
+            "app/vendors/func/func.https_ssleay.php",
+            "app/vendors/func/func.image.php",
+            "app/vendors/func/func.import.php",
+            "app/vendors/func/func.mail.php",
+            "app/vendors/func/func.order.php",
+            "app/vendors/func/func.order_edit.php",
+            "app/vendors/func/func.payment.php",
+            "app/vendors/func/func.product.php",
+            "app/vendors/func/func.product_feeds.php",
+            "app/vendors/func/func.snapshots.php",
+            "app/vendors/func/func.taxes.php",
+            "app/vendors/func/func.templater.php",
+            "app/vendors/func/func.tests.php",
+            "app/vendors/func/func.user.php",
+            "app/vendors/func/func.xml.php",
+            "app/vendors/blowfish.php"
+        ]
+    }
+}

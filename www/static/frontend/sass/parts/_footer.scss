@@ -1,0 +1,74 @@
+@import '../settings/sizes';
+
+.footer-menu {
+  display: block;
+  text-align: center;
+  //@include justify-menu();
+  padding: 0;
+  margin: 0;
+  height: $footer-height;
+  line-height: $footer-height;
+
+
+  li {
+    display: inline-block;
+    margin: 0 1em;
+    color: #d0eeff;
+    font: {
+      size: rem-calc(14);
+      weight: normal;
+    }
+
+    &:first-child {
+      margin-left: 0;
+    }
+
+    &:last-child {
+      margin-right: 0;
+    }
+
+    a { color: inherit; }
+  }
+
+  //.active {
+  //  border-bottom: rem-calc(3) solid #ffb400;
+  //  //height: ($header-big - rem-calc(1));
+  //  line-height: ($header-big - rem-calc(6));
+  //  box-sizing: border-box;
+  //}
+}
+
+footer {
+  height: $footer-height;
+  line-height: $footer-height;
+  background-color: #0d2431;
+}
+
+
+//@include breakpoint(medium up) {
+//  .off-canvas-wrapper {
+//    overflow-y: auto;
+//  }
+//}
+
+#content {
+  @include full-height;
+}
+
+
+.wrapper {
+  clear: both;
+  min-height: 100vh;
+  height: auto !important;
+  margin-bottom: -($footer-height);
+
+  .push {
+    height: $footer-height;
+  }
+}
+
+footer {
+  clear: both;
+  position: relative;
+  min-height: $footer-height;
+}

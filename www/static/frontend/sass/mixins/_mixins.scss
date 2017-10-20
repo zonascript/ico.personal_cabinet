@@ -1,0 +1,33 @@
+@mixin css3-prefix($property, $value) {
+  -webkit-#{$property}: #{$value};
+  -khtml-#{$property}: #{$value};
+  -moz-#{$property}: #{$value};
+  -ms-#{$property}: #{$value};
+  -o-#{$property}: #{$value};
+  #{$property}: #{$value};
+}
+
+
+@mixin full-height() {
+  min-height: calc(100vh - #{$footer-height + $header-small});
+
+  @include breakpoint(medium up) {
+    min-height: calc(100vh - #{$footer-height + $header-big});
+  }
+}
+
+@mixin placeholder() {
+  &::-webkit-input-placeholder { @content }
+  &::-moz-placeholder          { @content }/* Firefox 19+ */
+  &:-moz-placeholder           { @content }/* Firefox 18- */
+  &:-ms-input-placeholder      { @content }
+}
+
+@mixin autofill-color($color: white, $bg-color: black) {
+  &:-webkit-autofill {
+    -webkit-text-fill-color: $color;
+    -webkit-box-shadow: 0 0 0 999999px $bg-color inset;
+
+    @content;
+  }
+}

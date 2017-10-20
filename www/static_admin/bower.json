@@ -1,0 +1,11 @@
+{
+  "name": "phact-default-bower",
+  "dependencies": {
+    "jquery": ">=3.1.0",
+    "underscore": ">=1.8.3",
+    "slick-carousel": "~1.6.0",
+    "fancybox": "~2.1.5",
+    "flow-js": "~2"
+  },
+  "devDependencies": {}
+}

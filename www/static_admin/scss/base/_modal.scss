@@ -1,0 +1,14 @@
+.modal-modal-bg  {
+  z-index: 100000;
+
+  .modal-container {
+    .modal-closer {
+      width: 60px;
+      height: 60px;
+      background: $t url('../images/modal/closer.png') 50% 0 no-repeat;
+      background-size: (54px/2) (54px/2);
+      right: -60px;
+      top: 0;
+    }
+  }
+}

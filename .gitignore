@@ -1,0 +1,18 @@
+###################################
+## files with extensions to exclude
+www.*_*.xml
+thumbs.db
+Thumbs.db
+###################################
+## scripts to exclude
+/app/config/*_local.php
+/robots.txt
+/test.php
+/.idea/**
+node_modules/
+bower_components/
+/app/vendors/components/
+composer.lock
+www/static/temp/
+www/media/
+www/static_admin/temp/

@@ -1,0 +1,37 @@
+$grid-columns: 12;
+$max-row-width: 1008;
+$grid: (
+  large: (
+    from: 0,
+    gutter: 30
+  )
+);
+
+$body-font-size: 14px;
+$font: GothamPro, Arial, sans-serif;
+$h-font: $font;
+
+$header-height: 60px;
+$footer-height: 60px;
+$menu-height: $header-height;
+
+$input-height: 40px;
+$button-height: 40px;
+
+$t: transparent;
+
+$primary-color: #FC585E;
+$alert-color: #FC585E;
+$border-color: #DFDFDF;
+
+$default-transition: all 0.4s;
+
+$modal-content-radius: 0;
+$modal-content-padding: 0;
+$modal-closer-size: 0;
+$modal-content-background: $t;
+$modal-content-shadow: none;
+
+$main-block-padding-width: 30px;
+$main-block-padding-height: 25px;
+

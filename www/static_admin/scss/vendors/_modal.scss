@@ -1,0 +1,117 @@
+$modal-bg: rgba(0, 0, 0, 0.76) !default;
+
+$modal-content-radius: 5px !default;
+$modal-content-shadow: 3px 4px 35px rgba(92, 99, 100, 0.27) !default;
+$modal-content-padding: 30px !default;
+$modal-content-background: #fff !default;
+
+$modal-closer-color: $modal-bg !default;
+$modal-closer-size: 30px !default;
+
+$modal-preloader-size: 30px;
+
+.modal-modal-bg {
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  background: white;
+  background: $modal-bg;
+  z-index: 10000;
+  display: none;
+  top: 0;
+  left: 0;
+  overflow-y: scroll;
+
+  .modal-container {
+    display: none;
+    position: relative;
+    z-index: 11000;
+    cursor: default;
+    margin: 100px auto;
+
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+
+    .modal-closer {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+
+      font-size: $modal-closer-size;
+      color: $modal-closer-color;
+
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .modal-content {
+      padding: $modal-content-padding;
+      border-radius: $modal-content-radius;
+      background: $modal-content-background;
+      @include box-shadow($modal-content-shadow);
+    }
+  }
+}
+
+
+.modal-loader {
+  display: none;
+}
+
+body.modal-loading {
+  overflow: hidden;
+
+  .modal-loader {
+    display: block;
+    position: fixed;
+    z-index: 10000;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+    background-color: $modal-bg;
+
+    &:before {
+      content: '';
+      position: fixed;
+      width: $modal-preloader-size;
+      height: $modal-preloader-size;
+      left: 50%;
+      top: 50%;
+      background-color: #fff;
+      margin-left: -$modal-preloader-size/2;
+      margin-top: -$modal-preloader-size/2;
+      border-radius: $modal-preloader-size/2;
+    }
+
+    &:after {
+      $arrow-height: $modal-preloader-size/2;
+      content: '';
+      position: fixed;
+      width: 2px;
+      background-color: #000;
+      height: $arrow-height;
+      left: 50%;
+      top: 50%;
+      margin-left: -1px;
+      margin-top: -$arrow-height + 2px;
+
+      @include prefix(transform-origin, 50% $arrow-height - 2px);
+      @include prefix(animation-name, spin);
+      @include prefix(animation-iteration-count, infinite);
+      @include prefix(animation-duration, 1s);
+    }
+  }
+}
+
+@include keyframes(spin) {
+  0% {
+    @include transform(rotate(0deg));
+  }
+
+  100% {
+    @include transform(rotate(360deg));
+  }
+}

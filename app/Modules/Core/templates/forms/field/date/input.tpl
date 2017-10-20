@@ -1,0 +1,1 @@
+<input type="{$type}" value="{$value}" id="{$id}" name="{$name}" data-date {raw $html}>

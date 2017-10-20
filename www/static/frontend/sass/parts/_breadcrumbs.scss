@@ -1,0 +1,51 @@
+.breadcrumbs-container  {
+  margin: rem-calc(10) 0;
+
+  .breadcrumb-list {
+    display: inline;
+    line-height: 1.3;
+
+    li {
+      display: inline;
+      line-height: 1;
+      font-size: rem-calc(12);
+      color: #888;
+
+      a, span {
+        color: inherit;
+      }
+
+      &:after {
+        content: '>';
+        display: inline;
+      }
+
+      &:nth-last-child(1) {
+        color: #000;
+
+        &:after {
+          content: '';
+        }
+      }
+    }
+  }
+
+  .back {
+    //margin-right: 36px;
+    display: inline-block;
+    line-height: 1.3;
+
+    i {
+      padding-right: rem-calc(5);
+      vertical-align: middle;
+
+      &:before{
+        content: '';
+        display: inline-block;
+        background: url("../images/icons/breadcrumbs/back.svg") no-repeat;
+        width: 14px;
+        height: 13px;
+      }
+    }
+  }
+}

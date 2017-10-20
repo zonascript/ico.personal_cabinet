@@ -1,0 +1,1 @@
+<label for="{$id}" {raw $html}>{raw $label}</label>
