@@ -1,0 +1,11 @@
+{% extends "admin/base.html" %}
+
+{% block heading %}
+    <h1>{{ t('Dashboard', 'admin') }}</h1>
+{% endblock %}
+
+{% block content %}
+    {% for dashboard in dashboards %}
+        {{ dashboard.render()|safe }}
+    {% endfor %}
+{% endblock %}

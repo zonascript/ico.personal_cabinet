@@ -1,0 +1,41 @@
+.toolbar {
+  width: 100%;
+
+  td {
+    input, select, .button {
+      height: 34px;
+    }
+
+    .button .icon {
+      font-size: 0.9rem;
+      margin-top: 1px !important;
+    }
+
+    &.toolbar-actions-td {
+      padding: 0 0 0 0 !important;
+      width: 350px;
+
+      select {
+        width: 200px;
+        border: 1px solid rgba(34, 36, 38, 0.15);
+        border-radius: 0.28571rem 0 0 0.28571rem;
+        margin: 0 -3px 0 5px !important;
+        padding: 0.2rem 0.5rem;
+        @include crossbrowser(appearance, none);
+      }
+
+      .create.button, .input.action {
+        vertical-align: middle;
+      }
+    }
+
+    &.toolbar-search-td {
+      padding: 0 0 0 5px !important;
+
+      input {
+        padding: 0.2em 1em;
+        width: 200px;
+      }
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{% for item in apps %}
+    <li>
+        <span>
+            {% if item.items %}
+                {% set first = item.items|first %}
+                <a class="module-name" href="{% if first.url %}{% url first.url|lower item.module first.adminClass %}{% else %}{% url 'admin:list' item.module first.adminClass %}{% endif %}">
+            {% else %}
+                <span class="module-name">
+            {% endif %}
+
+            <span class="{{ item.module|lower }} module-image" ></span>
+
+            {{ item.name }}
+
+            {% if not item.items %}
+                </span>
+            {% else %}
+                </a>
+            {% endif %}
+        </span>
+        {% if item.items and item.items|length > 1 %}
+            <ul>
+                {% for child in item.items %}
+                    <li>
+                        <a href="{% if child.url %}{% url child.url item.module child.adminClass %}{% else %}{% url 'admin:list' item.module child.adminClass %}{% endif %}">
+                            {{ child.name }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </li>
+    <li>
+        <span class="divider"></span>
+    </li>
+{% endfor %}

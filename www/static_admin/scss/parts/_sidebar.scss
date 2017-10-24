@@ -1,0 +1,166 @@
+#sidebar {
+  #header {
+    @include clearfix;
+    padding: 0 $defaultPadding;
+    height: $logoSize;
+    line-height: $logoSize;
+    margin: 20px 0;
+
+    #logo {
+      width: $logoSize;
+      height: $logoSize;
+      font-size: $logoSize;
+      font-weight: 700;
+
+      color: $darkGrey;
+      margin: -6px 0 0;
+      @include antialias;
+    }
+
+    .manage {
+      a {
+        color: $darkGrey;
+        padding: 0 0 0 10px;
+        text-align: center;
+        font-size: 1rem;
+      }
+    }
+
+    .user-panel {
+      @include reset-list;
+
+      li {
+        @include float-left;
+        margin-left: 15px;
+      }
+    }
+  }
+
+  #sidebar-menu {
+    @include reset-list;
+    padding-bottom: 20px;
+
+    & > li {
+      margin-bottom: 10px;
+    }
+
+    li {
+      .divider {
+        display: block;
+        height: 1px;
+        margin: 0 $defaultPadding;
+        background-color: $borderColor;
+      }
+
+      & > span {
+        font-size: .9rem;
+        text-transform: capitalize;
+
+        $moduleNameHeight: 24px;
+        $imageSize: 16px;
+
+        .module-name {
+          color: #353535;
+          display: block;
+          line-height: $moduleNameHeight;
+          padding-left: $defaultPadding;
+          padding-right: $defaultPadding;
+
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+
+        .module-image {
+          width: 16px;
+          height: $moduleNameHeight;
+          display: inline-block;
+          float: left;
+          margin-right: 6px;
+        }
+      }
+
+      ul {
+        @include reset-list;
+        margin-top: 8px;
+        display: inline-block;
+        width: 100%;
+
+        li {
+          position: relative;
+          font-size: .9rem;
+          margin: 0;
+
+          &, & a {
+            color: #353535;
+          }
+
+          &.active, &:hover {
+            $borderLeftSize: 4px;
+
+            a {
+              border-color: $blue;
+              color: $blue;
+
+              i {
+                color: $blue;
+              }
+            }
+          }
+
+          a {
+            transition: $transition;
+            border-left: 4px solid transparent;
+            font-size: .9rem;
+            display: block;
+            padding-left: 44px;
+            font-weight: normal;
+
+            i {
+              width: 25px;
+              display: inline-block;
+              color: darken($midGrey, 10%);
+              position: relative;
+              top: 2px;
+              font-size: 17px;
+            }
+          }
+        }
+      }
+
+      &:last-child {
+        .divider {
+          display: none;
+        }
+      }
+    }
+  }
+}
+
+$modules: core faq mail meta menu offices partners photo pages redirect reviews sites slider user blog files translate catalog calc;
+
+.module-image {
+  background-position: 50% 50%;
+  background-size: 16px 16px;
+  background-image: url('../images/modules/default.png');
+  background-repeat: no-repeat;
+
+  @each $module in $modules {
+    &.#{$module} {
+      background-image: url('../images/modules/#{$module}.png');
+    }
+  }
+}
+
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi)
+{
+  .module-image {
+    background-image: url('../images/modules/default@2x.png');
+
+    @each $module in $modules {
+      &.#{$module} {
+        background-image: url('../images/modules/#{$module}.png');
+      }
+    }
+  }
+}

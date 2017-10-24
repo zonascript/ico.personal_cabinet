@@ -2,11 +2,10 @@
 
 namespace Modules\Pages\Controllers;
 
+use Mindy\Base\Mindy;
+use Mindy\Pagination\Pagination;
+use Modules\Core\Controllers\FrontendController;
 use Modules\Pages\Models\Page;
-use Xcart\App\Controller\FrontendController;
-use Xcart\App\Main\Xcart;
-use Xcart\App\Pagination\DataSource\QuerySetDataSource;
-use Xcart\App\Pagination\Pagination;
 
 /**
  * Class PageController
@@ -27,17 +26,24 @@ class PageController extends FrontendController
 
     public function actionView($url = null)
     {
-        $model = Page::objects()
-            ->published()
-            ->get(empty($url) ? ['is_index' => true] : ['url' => ltrim($url, '/')]);
+        $cache = Mindy::app()->cache;
+        $cacheKey = Page::CACHE_PREFIX . $url;
+        $model = $cache->get($cacheKey);
+        if (!$model) {
+            $model = Page::objects()
+                ->published()
+                ->get(empty($url) ? ['is_index' => true] : ['url' => ltrim($url, '/')]);
 
-        if ($model === null) {
-            $this->error(404);
-        }
+            if ($model === null) {
+                $this->error(404);
+            }
 
-        // Remove duplicate of index page
-        if ($model->is_index && !empty($url)) {
-            $this->error(404);
+            // Remove duplicate of index page
+            if ($model->is_index && !empty($url)) {
+                $this->error(404);
+            }
+
+            $cache->set($cacheKey, $model, 3600);
         }
 
         $this->setCanonical($model);
@@ -62,9 +68,11 @@ class PageController extends FrontendController
 
     public function actionInternal(Page $model)
     {
-        $pager = new Pagination($model->getChildrenQuerySet(), [], new QuerySetDataSource());
+        $pager = new Pagination($model->getChildrenQuerySet());
+        $children = $pager->paginate();
         return $this->render($this->getView($model), [
             'model' => $model,
+            'children' => $children,
             'pager' => $pager,
         ]);
     }

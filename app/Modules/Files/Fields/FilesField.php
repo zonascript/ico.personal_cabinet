@@ -2,127 +2,112 @@
 
 namespace Modules\Files\Fields;
 
-use Modules\Files\Validators\RequiredFilesValidator;
-use Xcart\App\Form\Fields\CharField;
+use Mindy\Base\Mindy;
+use Mindy\Form\Fields\Field;
+use Mindy\Helper\JavaScript;
+use Mindy\Utils\RenderTrait;
 
-class FilesField extends CharField
+class FilesField extends Field
 {
-    public $inputTemplate = 'files/fields/images_field_input.tpl';
+    use RenderTrait;
 
-    /**
-     * Sort route
-     * @var
-     */
-    public $sortUrl = 'files:sort';
+    public $relatedFileField = 'file';
+    public $relatedSortingField = 'position';
 
-    /**
-     * Upload route
-     * @var
-     */
-    public $uploadUrl = 'files:upload';
+    public $uploadUrl;
+    public $sortUrl;
+    public $deleteUrl;
+    public $template = "files/fields/files.html";
 
-    /**
-     * Delete route
-     * @var
-     */
-    public $deleteUrl = 'files:delete';
-
-    /**
-     * Limit for one upload
-     * @var int
-     */
-    public $limit = 20;
-
-    public $limitMessage = 'Извините, единовременно можно загрузить до 20 файлов';
-
-    public $maxSizeMessage = 'Извините, превышен размер загружаемого файла';
-
-    public $notAllowedMessage = 'Извините, можно загрузить только указанные типы файлов';
-
-    public $accept = '*';
-
-    public $types = [];
-
-    public $maxFileSize = 5242880;
-
-    public $fileField = 'file';
-    public $sortField = 'position';
-
-    public function setDefaultValidators()
+    public function getUploadUrl()
     {
-        if ($this->required) {
-            $validator = new RequiredFilesValidator($this->requiredMessage);
-            $validator->field = $this->getName();
-            $validator->owner = $this->getForm()->getInstance();
-            $this->_validators[] = $validator;
+        if (!$this->uploadUrl) {
+            $this->uploadUrl = Mindy::app()->urlManager->reverse('files:files_upload');
         }
+        return $this->uploadUrl;
     }
 
-    public function getRenderValue()
+    public function getSortUrl()
     {
-        $instance = $this->getForm()->instance;
-        if (!$instance->pk) {
-            return null;
-        } else {
-            return $instance->{$this->getName()};
+        if (!$this->sortUrl) {
+            $this->sortUrl = Mindy::app()->urlManager->reverse('files:files_sort');
         }
+        return $this->sortUrl;
     }
 
-    public function getModelClass()
+    public function getDeleteUrl()
     {
-        $instance = $this->getForm()->instance;
-        $field = $instance->{$this->getName()};
-        $model = $field->getModel();
-        return $model->className();
+        if (!$this->deleteUrl) {
+            $this->deleteUrl = Mindy::app()->urlManager->reverse('files:files_delete');
+        }
+        return $this->deleteUrl;
     }
 
-    public function getCommonData()
+    public function getData($encoded = true)
     {
-        $instance = $this->getForm()->instance;
-        return [
-            'pk' => $instance->pk,
-            'class' => $instance->className(),
-            'name' => $this->getName(),
-            'fileField' => $this->fileField,
-            'sortField' => $this->sortField
-        ];
-    }
-
-    public function getFieldData($encode = true)
-    {
-        $commonData = $this->getCommonData();
-
+        $model = $this->form->getInstance();
         $data = [
-            'uploadUrl' => $this->routeToUrl($this->uploadUrl),
-            'sortUrl' => $this->routeToUrl($this->sortUrl),
-            'deleteUrl' => $this->routeToUrl($this->deleteUrl),
-
-            'flowData' => $commonData,
-            'sortData' => $commonData,
-            'deleteData' => $commonData,
-
-            'limit' => $this->limit,
-            'maxFileSize' => $this->maxFileSize,
-            'accept' => $this->accept,
-            'types' => $this->types,
-
-
-            'limitMessage' => $this->limitMessage,
-            'maxSizeMessage' => $this->maxSizeMessage,
-            'notAllowedMessage' => $this->notAllowedMessage,
+            'uploadUrl' => $this->getUploadUrl(),
+            'sortUrl' => $this->getSortUrl(),
+            'deleteUrl' => $this->getDeleteUrl(),
+            'listId' => $this->getListId(),
+            'contentId' => $this->getContentId(),
+            'flowData' => [
+                'pk' => $model->pk,
+                'name' => $this->getName(),
+                'class' => $model::className(),
+                'fileField' => $this->relatedFileField,
+                Mindy::app()->request->csrf->csrfTokenName => Mindy::app()->request->csrf->csrfToken
+            ],
+            'sortData' => [
+                'field' => $this->relatedSortingField,
+                'name' => $this->getName(),
+                'class' => $model::className(),
+                Mindy::app()->request->csrf->csrfTokenName => Mindy::app()->request->csrf->csrfToken
+            ],
+            'deleteData' => [
+                'name' => $this->getName(),
+                'class' => $model::className(),
+                Mindy::app()->request->csrf->csrfTokenName => Mindy::app()->request->csrf->csrfToken
+            ]
         ];
-
-        if ($encode) {
-            return json_encode($data);
-        }
-        return $data;
+        return ($encoded) ? JavaScript::encode(($data)) : $data;
     }
 
-    public function routeToUrl($url)
+    public function getQuerySet()
     {
-        if (mb_strpos($url, ':', 0, 'UTF-8') !== false) {
-            $url = Phact::app()->router->url($url);
-        }
-        return $url;
+        $qs = $this->form->getInstance()->getField($this->getName())->getManager()->getQuerySet();
+        return $qs->order([$this->relatedSortingField]);
+    }
+
+    public function renderInput()
+    {
+        $items = $this->getQuerySet()->all();
+        $model = $this->form->getInstance();
+ 
+        return $this->renderTemplate($this->template, [
+            'items' => $items,
+            'data' => $this->getData(true),
+            'id' => $this->uniqueId(),
+            'filesId' => $this->getListId(),
+            'contentId' => $this->getContentId(),
+            'fileField' => $this->relatedFileField,
+            'modelPk' => $model->pk
+        ]);
+    }
+
+    public function uniqueId()
+    {
+        return $this->getId() . '_' . $this->name;
+    }
+
+    public function getListId()
+    {
+        return $this->uniqueId() . '_files';
+    }
+
+    public function getContentId()
+    {
+        return $this->uniqueId() . '_content';
     }
 }

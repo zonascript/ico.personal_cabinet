@@ -1,0 +1,11 @@
+input, select {
+  outline: none;
+}
+
+p{
+  margin: 0;
+}
+
+.clear{
+  @include clear();
+}

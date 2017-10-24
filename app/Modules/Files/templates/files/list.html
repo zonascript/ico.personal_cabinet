@@ -1,0 +1,126 @@
+{% extends request.isAjax ? "ajax.html" : "files/base.html" %}
+
+{% block heading %}
+    <h1>{{ t('Files', 'files') }}</h1>
+{% endblock %}
+
+{% block content %}
+    <div class="file-manager" id="zone">
+        <table class="files">
+            <tbody>
+            {% if upFolder %}
+                <tr class="dir">
+                    <td class="file-check">
+
+                    </td>
+                    <td class="file-icon">
+                        <i class="icon-folder"></i>
+                    </td>
+                    <td class="file-name">
+                        <a href="#" class="file-link" data-path="{{ upFolder }}">
+                            &larr;
+                        </a>
+                    </td>
+                    <td class="file-actions"></td>
+                </tr>
+            {% endif %}
+            {% for directory in structure.directories %}
+                <tr class="dir">
+                    <td class="file-check">
+                        <input class="delete-checker" type="checkbox" name="deleteFiles[]"
+                               value="{{ directory.path }}"/>
+                    </td>
+                    <td class="file-icon">
+                        <i class="icon-folder"></i>
+                    </td>
+                    <td class="file-name">
+                        <a href="#" class="file-link" data-path="{{ directory.path }}" data-url="{{ directory.url }}">
+                            {{ directory.name }}
+                        </a>
+                    </td>
+                    <td class="file-actions">
+                        <a href="#" class="delete-link" data-path="{{ directory.path }}">
+                            <i class="icon-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+            {% for file in structure.files %}
+                <tr class="file">
+                    <td class="file-check">
+                        <input class="delete-checker" type="checkbox" name="files[]" value="{{ file.path }}"/>
+                    </td>
+                    <td class="file-icon">
+                        <i class="icon-file"></i>
+                    </td>
+                    <td class="file-name">
+                        <a href="{{ file.url }}" target="_blank" data-path="{{ file.path }}" data-url="{{ file.url }}">
+                            {{ file.name }}
+                        </a>
+                    </td>
+                    <td class="file-actions">
+                        <a href="#" class="delete-link" data-path="{{ file.path }}">
+                            <i class="icon-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="row actions-row manage">
+            <div class="large-3 column">
+                <a class="button expand" id="select" href="#">
+                    {{ t('Select files to upload', 'files') }}
+                </a>
+            </div>
+            <div class="large-3 column">
+                <a class="button expand remove-selected" href="#">
+                    {{ t('Remove selected files', 'files') }}
+                </a>
+            </div>
+            <div class="large-3 column">
+                <input class="create-folder-input" id="folderName" type="text"
+                       placeholder="{{ t('Folder name', 'files') }}"/>
+                <button class="create-folder-button button expand">{{ t('Create new folder', 'files') }}</button>
+            </div>
+            <div class="large-3 column"></div>
+        </div>
+
+        <div class="uploading-info">
+            <div class="info-table">
+                <div class="cell">
+                    <h1>{{ t('Uploading, please wait...', 'files') }}</h1>
+
+                    <p class="progress">
+                        <span id="progress_bar" class="meter"></span>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="drop-info">
+            <div class="info-table">
+                <div class="cell">
+                    <h1>{{ t('Drop files here', 'files') }}</h1>
+                </div>
+            </div>
+
+        </div>
+        <div class="messages"></div>
+    </div>
+
+    <script type="text/javascript">
+        $(function () {
+            $('.file-manager').fileapi({
+                startPath: '{{ path }}',
+                uploadUrl: '{% url 'files:upload' %}',
+                listUrl: '{% url 'files:index' %}',
+                apiUrl: '{% url 'files:api' %}',
+                csrfName: '{{ request.csrf.name }}',
+                csrf: '{{ request.csrf.value }}',
+                deletePrevention: '{{ t('Do you really want to delete the file?', 'files') }}'
+            });
+        });
+    </script>
+{% endblock %}

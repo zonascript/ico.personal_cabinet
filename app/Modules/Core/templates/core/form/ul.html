@@ -1,0 +1,85 @@
+{% if form.errors %}
+    <ul class="form-errors">
+        {% for name, errors in form.errors %}
+            {% for field_name, error in errors %}
+                {{ form.getField(name).label ? form.getField(name).label : name }}:
+                {% if error|is_array %}
+                    {% for inline_name, inline_errors in error %}
+                        <ul class="form-errors-inline">
+                            <span class="inline-name">{{ inline_name }} {{ i+1 }}</span>
+                            {% for inline_error in inline_errors %}
+                                <li>{{ inline_error }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endfor %}
+                {% else %}
+                    <li>{{ error }}</li>
+                {% endif %}
+            {% endfor %}
+        {% endfor %}
+    </ul>
+{% endif %}
+
+{% if form.fieldsets %}
+    {% for fieldset, fields in form.fieldsets %}
+        <fieldset>
+            <legend>{{ fieldset }}</legend>
+            <ul class="form-ul">
+                {{ form.render("core/form/ul-fields.html", fields)|raw }}
+            </ul>
+        </fieldset>
+    {% endfor %}
+{% else %}
+    <ul class="form-ul">
+        {% for field in form %}
+            <li>{{ field|safe }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+
+{% for name, instances in inlines %}
+    <hr/>
+    <section class="inline-form">
+        <h3 class="inline-title">{{ name }}</h3>
+        {% for inline in instances %}
+            {% if loop.counter > inline.max %}
+                {% break %}
+            {% endif %}
+            {% if not loop.last %}
+                <section id="{{ inline.classNameShort }}-{{ inline.id }}-container"
+                         class="inline-form-item form-inline-section">
+                    {% if inline.errors %}
+                        <ul class="form-errors inline-errors">
+                            {% for errors in inline.errors %}
+                                {% for error in errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+
+                    <ul class="form-inline">
+                        {% for field in inline %}
+                            {% if not field.hidden %}
+                                <li>
+                                    {{ field|safe }}
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                    {% for field in inline %}
+                        {% if field.hidden %}
+                            {{ field|safe }}
+                        {% endif %}
+                    {% endfor %}
+                </section>
+            {% else %}
+                <code class="inline-source">
+                    <pre id="{{ inline.classNameShort }}-{{ inline.id }}-source"><section class="inline-form-item form-inline-section"><a class="form-inline-delete" href="#">&times;</a>{{ inline.renderType(inline.defaultTemplateType)|safe }}</section></pre>
+                </code>
+                <a href="#" class="inline-add"
+                   data-id="{{ inline.classNameShort }}-{{ inline.id }}-source">{{ t('Add', 'core') }}</a>
+            {% endif %}
+        {% endfor %}
+    </section>
+{% endfor %}

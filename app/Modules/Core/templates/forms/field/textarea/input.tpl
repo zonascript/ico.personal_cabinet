@@ -1,1 +1,0 @@
-<textarea id="{$id}" name="{$name}" {raw $html}>{$value}</textarea>

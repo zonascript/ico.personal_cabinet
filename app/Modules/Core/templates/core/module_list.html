@@ -1,0 +1,60 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+    <h1>Modules</h1>
+
+    {% if modules|length > 0 %}
+    <table>
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Purchased</th>
+            <th>Author</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+            {% for module in modules %}
+            <tr>
+                <td><a class="mmodal" data-width="750" href="{% url 'core.module_view' module.name %}">{{ module.name }}</a></td>
+                <td>{{ module.price }}</td>
+                <td>{% if module.purchased %}Yes{% else %}No{% endif %}</td>
+                <td>{{ module.author.username }}</td>
+                <td>
+                    {% if app.hasModule(module.name) %}
+                        {% if module.versions|length > 0 %}
+                            {% set update_version = module.versions[0].version %}
+                        {% else %}
+                            {% set update_version = 0 %}
+                        {% endif %}
+                        {% if not update_version %}
+                            You have last version of this module
+                        {% else %}
+                            <a href="{% url 'core.module_update' module.name update_version %}" class="button">Update to {{ update_version }}</a>
+                        {% endif %}
+                    {% else %}
+                        <a href="{% url 'core.module_install' module.name %}" class="button">Install</a>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td colspan="5">
+                    <h5>Description</h5>
+                    {{ module.description }}
+
+                    <h5>Versions</h5>
+                    <ul>
+                    {% for version in module.versions %}
+                        <li>{{ version.version }} - {{ version.file }}</li>
+                    {% endfor %}
+                    </ul>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+        Sorry, repository not available. Please try again later.
+    {% endif %}
+{% endblock %}

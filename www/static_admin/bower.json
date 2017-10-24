@@ -1,11 +1,24 @@
 {
-  "name": "phact-default-bower",
+  "name": "static_admin",
   "dependencies": {
-    "jquery": ">=3.1.0",
-    "underscore": ">=1.8.3",
-    "slick-carousel": "~1.6.0",
+    "meditor": "~0.0.2",
+    "foundation": "5.5.1",
+    "mindy-sass": "*",
+    "checkboxes.js": "~1.0.3",
+    "select2": "~3.4.6",
+    "jquery-autosize": "~1.18.7",
+    "jquery-ui": "~1.10.4",
+    "font-awesome": "~4.1.0",
+    "flow.js": "~2",
+    "Chart.js": "*",
+    "mmodal": "1.0.0",
     "fancybox": "~2.1.5",
-    "flow-js": "~2"
-  },
-  "devDependencies": {}
+    "pickmeup": ">=2.5.1",
+    "remarkable": "~1.6.0",
+    "jquery-form": "~3.46.0",
+    "semantic-ui": "~2.0.3",
+    "perfect-scrollbar": "~0.6.3",
+    "ueditor107": "*",
+    "codemirror": "~5.5.0"
+  }
 }

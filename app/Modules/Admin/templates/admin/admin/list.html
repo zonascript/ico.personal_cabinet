@@ -1,0 +1,19 @@
+{% extends request.isAjax ? "ajax.html" : 'admin/base.html' %}
+
+{% block content_class %}list{% endblock %}
+
+{% block heading %}
+    <h1>
+        {{ admin.getVerboseNameList() }}
+        {% if id %}
+        <a class="tiny ui button basic icon" href="{% url 'admin:update' moduleName adminClass id %}">
+            <i class="icon write"></i>
+            {{ t('Update', 'admin') }}
+        </a>
+        {% endif %}
+    </h1>
+{% endblock %}
+
+{% block content %}
+    {{ out|raw }}
+{% endblock %}

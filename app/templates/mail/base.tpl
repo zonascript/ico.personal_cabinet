@@ -1,1 +1,0 @@
-{extends "mail/base_template.tpl"}

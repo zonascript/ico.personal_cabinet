@@ -1,13 +1,18 @@
 <?php
+
 return [
-    'Core',
     'Admin',
-    'Editor',
-    'Files',
-    'Main',
+    'Core',
+    'Akara',
+    'Pages',
     'Menu',
     'Meta',
-    'Pages',
-    'User'   => ['sessionTime' => (86400)],
-    'Sites'  => ['defaultStore' => 'S3'],
+    'User',
+    'Files',
+    'Mail',
+    'Redirect',
+    'Sitemap',
+    'Sites',
+    'Translate',
+
 ];

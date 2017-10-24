@@ -1,13 +1,29 @@
 <?php
-error_reporting(E_ALL & ~E_NOTICE);
 
-date_default_timezone_set('EST'); //Magic;
+defined('MINDY_PATH') or define('MINDY_PATH', dirname(__FILE__) . DIRECTORY_SEPARATOR);
 
-require_once '../app/vendors/components/autoload.php';
+$debug = false;
 
-$config = include '../app/config/settings.php';
+$config = MINDY_PATH . '../app/config/settings';
+if (is_file($config . '_local.php')) {
+    $config .= '_local';
+    $debug = true;
+}
 
-use Xcart\App\Main\Xcart;
+if ($debug) {
+    defined('MINDY_DEBUG') or define('MINDY_DEBUG', true);
+    defined('MINDY_TRACE_LEVEL') or define('MINDY_TRACE_LEVEL', 3);
+    defined('MINDY_ENABLE_ERROR_HANDLER') or define('MINDY_ENABLE_ERROR_HANDLER', true);
+    defined('MINDY_ENABLE_EXCEPTION_HANDLER') or define('MINDY_ENABLE_EXCEPTION_HANDLER', true);
+    ini_set('error_reporting', -1);
+}
 
-Xcart::init($config);
-Xcart::app()->run();
+// Composer autoloader
+if (!is_file(MINDY_PATH . '../app/vendor/autoload.php')) {
+    throw new Exception("Please run 'composer install' in app/ directory");
+}
+
+include(MINDY_PATH . '../app/vendor/autoload.php');
+
+$app = \Mindy\Base\Mindy::getInstance($config . '.php');
+$app->run();

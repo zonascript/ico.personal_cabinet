@@ -1,0 +1,48 @@
+#login {
+  width: 350px;
+  padding-bottom: 45px;
+
+  h3 {
+    margin: 0 0 20px;
+  }
+
+  form {
+    padding-bottom: 0;
+
+    input {
+      border: 1px solid rgba(34, 36, 38, 0.15);
+      border-radius: 3px;
+    }
+  }
+
+  #base {
+    min-width: inherit;
+    display: block;
+  }
+
+  #base-line {
+    display: block;
+  }
+
+  .header {
+
+    #logo {
+      text-align: center;
+      font-size: 4rem;
+      margin: 15px 0;
+    }
+  }
+
+  .container {
+    @include box-shadow(0 0 29px rgba(1, 1, 1, .08));
+    @include border-radius(8px);
+    padding: 25px;
+    background-color: #fff;
+
+    h1 {
+      font-size: 48px;
+      text-align: center;
+      font-weight: 700;
+    }
+  }
+}

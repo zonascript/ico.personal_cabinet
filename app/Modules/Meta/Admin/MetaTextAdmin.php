@@ -14,19 +14,27 @@
 namespace Modules\Meta\Admin;
 
 use Modules\Admin\Components\ModelAdmin;
-use Modules\Admin\Contrib\Admin;
 use Modules\Meta\Models\MetaText;
 use Modules\Meta\MetaModule;
 
-//class MetaTextAdmin extends Admin
-//{
-//    public function getColumns()
-//    {
-//        return ['code', 'title'];
-//    }
-//
-//    public function getModel()
-//    {
-//        return new MetaText;
-//    }
-//}
+class MetaTextAdmin extends ModelAdmin
+{
+    public function getColumns()
+    {
+        return ['code', 'title'];
+    }
+    
+    public function getModel()
+    {
+        return new MetaText;
+    }
+    
+    public function getNames($model = null)
+    {
+        return [
+            MetaModule::t('Meta Texts'),
+            MetaModule::t('Create Meta Text'),
+            MetaModule::t('Update Meta Text')
+        ];
+    }
+}

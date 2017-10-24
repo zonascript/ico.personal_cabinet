@@ -1,50 +1,59 @@
-.flash-messages-block {
-  position: fixed;
-  right: 0;
-  top: 0;
-  left: $menu-width;
-  z-index: 1000;
+.flash-list {
+  @include reset-list;
+  margin: 20px 0;
 
-  .flash-list {
-    display: block;
+  li {
+    border-radius: 5px;
+    font-weight: 300;
+    font-size: 1.2rem;
+    background-color: $grey;
+    border: {
+      style: solid;
+      color: darken($grey, 10%);
+      width: 1px;
+    }
+    padding: 15px $defaultPadding 15px $defaultPadding + 33px + 15px;
+    margin-bottom: 10px;
 
-    .flash-message {
-      display: block;
-      height: 60px;
-      line-height: 60px;
-      padding-left: 80px;
-      padding-right: 20px;
-      font-size: 18px;
-      /* Rectangle 2 Copy 2: */
+    background: {
+      position: $defaultPadding 50%;
+      repeat: no-repeat;
+    }
 
-      a {
-        text-decoration: none;
-      }
+    .icon {
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 1.4rem;
+      line-height: 1.8rem;
+      @include opacity(0.5);
+    }
 
-      a, span {
-        display: inline-block;
-        vertical-align: middle;
-      }
+    &.success {
+      background-image: url(../images/icons/icon-success.png);
+      color: #948461;
+      border-color: #EBE2B6;
+      background-color: #F9F6E3;
+    }
 
-      &.error {
-        background: #FDEAEA url('../images/flash/error-flash.png') 20px 50% no-repeat;
-        background-size: 40px 40px;
-        border-bottom: 1px solid #E3B7B7;
+    &.info {
+      background-image: url(../images/icons/icon-info.png);
+      color: #948461;
+      border-color: #EBE2B6;
+      background-color: #F9F6E3;
+    }
 
-        span, i {
-          color: #955F5F;
-        }
-      }
+    &.error {
+      background-image: url(../images/icons/icon-error.png);
+      color: #ca8989;
+      border-color: #e2b7b7;
+      background-color: #fdeaea;
+    }
 
-      &.success {
-        background: #D5F8AD url('../images/flash/success-flash.png') 20px 50% no-repeat;
-        background-size: 40px 40px;
-        border-bottom: 1px solid #A6D76E;
-
-        span, i {
-          color: #698D3F;
-        }
-      }
+    &.warning {
+      background-image: url(../images/icons/icon-warning.png);
+      color: #c48383;
+      border-color: #f1d0d0;
+      background-color: #ffebeb;
     }
   }
 }

@@ -2,8 +2,9 @@
 
 namespace Modules\Core\Middleware;
 
-use Xcart\App\Cli\Cli;
-use Xcart\App\Middleware\Middleware;
+use Mindy\Helper\Console;
+use Mindy\Http\Request;
+use Mindy\Middleware\Middleware;
 
 class CorsMiddleware extends Middleware
 {
@@ -20,9 +21,9 @@ class CorsMiddleware extends Middleware
      */
     public $headers = ['X-Auth-Token', 'X-Requested-With', 'X-CSRFToken', 'Content-Type'];
 
-    public function processRequest($request)
+    public function processRequest(Request $request)
     {
-        if (Cli::isCli() == false) {
+        if (Console::isCli() == false) {
             $origin = isset($_SERVER['HTTP_ORIGIN']) ? $_SERVER['HTTP_ORIGIN'] : $this->origin;
             header('Access-Control-Allow-Origin: ' . $origin);
             header('Access-Control-Allow-Methods: ' . (is_string($this->methods) ? $this->methods : implode($this->methods, ', ')));

@@ -1,0 +1,27 @@
+<aside id="sidebar">
+    <header id="header">
+        <nav class="manage right">
+            <a href="/" target="_blank" class="ui popup-item"
+               data-content="{{ t('Open site', 'admin') }}"
+               data-variation="tiny inverted">
+                <i class="icon-link"></i>
+            </a>
+            <a href="{% url 'admin:changepassword' user.pk %}" class="ui popup-item"
+               data-content="{{ t('Change password', 'user') }}"
+               data-variation="tiny inverted">
+                <i class="icon-key"></i>
+            </a>
+            <a href="{% url 'admin:logout' %}" class="ui popup-item"
+               data-content="{{ t('Logout', 'user') }}"
+               data-variation="tiny inverted">
+                <i class="icon-logout"></i>
+            </a>
+        </nav>
+
+        <h1 id="logo"><a href="{% url 'admin:index' %}"><i class="icon-mindy"></i> {{ get_version }}</a></h1>
+    </header>
+
+    <nav id="sidebar-menu">
+        {% include 'admin/menu.html' %}
+    </nav>
+</aside>

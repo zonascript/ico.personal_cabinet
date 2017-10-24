@@ -1,0 +1,33 @@
+.button {
+  @include border-radius(3px);
+  outline: none;
+  background-color: $blue;
+
+  &:active {
+    background-color: $midBlue;
+  }
+
+  &:hover {
+    background-color: $midBlue;
+  }
+
+  &.grey {
+    background-color: $softGrey;
+    color: $darkGrey;
+
+    &:active {
+      background-color: $semiSoftGrey;
+    }
+
+    &:hover {
+      background-color: $semiSoftGrey;
+    }
+  }
+
+  &.transparent {
+    @include border-radius(3px);
+    background-color: transparent;
+    color: $darkGrey;
+    border: 1px solid $midGrey;
+  }
+}

@@ -1,180 +1,342 @@
 <?php
+
 namespace Modules\User\Components;
 
+use Exception;
+use Mindy\Base\Mindy;
+use Mindy\Helper\Creator;
+use Mindy\Helper\Traits\Accessors;
+use Mindy\Helper\Traits\Configurator;
+use Mindy\Http\Cookie;
+use Mindy\Orm\Model;
+use Modules\User\Models\User;
+use Modules\User\UserModule;
 
-use Modules\User\Models\UserModel;
-use Xcart\App\Cli\Cli;
-use Xcart\App\Helpers\SmartProperties;
-use Xcart\App\Interfaces\AuthInterface;
-use Xcart\App\Main\Xcart;
-
-class Auth implements AuthInterface
+/**
+ * Class Auth
+ * @package Modules\User
+ */
+class Auth
 {
-    use SmartProperties;
+    use Accessors, Configurator, UserActionsTrait;
+
+    const AUTH_TIMEOUT_VAR = '__timeout';
+    const AUTH_ABSOLUTE_TIMEOUT_VAR = '__absolute_timeout';
 
     /**
-     * @var UserModel
+     * @var bool
      */
-    protected $_user = null;
-
+    public $autoRenewCookie = true;
     /**
-     * Login expire
-     * Default: 60 days
-     * @var int
+     * @var bool
      */
-    public $expire = 5184000;
-
-    /**
-     * @var string
-     */
-    public $authCookieName = 'USER';
-
+    public $allowAutoLogin = true;
     /**
      * @var string
      */
-//    public $authSessionName = 'USER_ID';
-    public $authSessionName = 'admin_login';
+    public $modelClass = '\Modules\User\Models\User';
+    /**
+     * @var integer timeout in seconds after which user is logged out if inactive.
+     * If this property is not set, the user will be logged out after the current session expires
+     * (c.f. {@link CHttpSession::timeout}).
+     * @since 1.1.7
+     */
+    public $authTimeout;
+    /**
+     * @var integer timeout in seconds after which user is logged out regardless of activity.
+     * @since 1.1.14
+     */
+    public $absoluteAuthTimeout;
+    /**
+     * Password hashers
+     * @var array name => className
+     */
+    public $passwordHashers = [
+        'mindy' => '\Modules\User\PasswordHasher\MindyPasswordHasher',
+    ];
+    /**
+     * @var array the property values (in name-value pairs) used to initialize the identity cookie.
+     * Any property of {@link CHttpCookie} may be initialized.
+     * This property is effective only when {@link allowAutoLogin} is true.
+     */
+    public $identityCookie;
+    /**
+     * @var null|Model
+     */
+    private $_model;
+    /**
+     * @var
+     */
+    private $_keyPrefix;
+    /**
+     * @var array
+     */
+    private $_passwordHashers = [];
 
-    public $class = 'Modules\User\Models\UserModel';
-
-    public function login($user, $rememberMe = true)
+    /**
+     * Initializes the application component.
+     * This method overrides the parent implementation by starting session,
+     * performing cookie-based authentication if enabled, and updating the flash variables.
+     */
+    public function init()
     {
-        $this->updateSession($user);
-        if ($rememberMe) {
-            $this->updateCookie($user);
+        $signal = $this->getEventManager();
+        $signal->handler($this, 'onAuth', [$this, 'onAuth']);
+
+        if ($this->getIsGuest() && $this->allowAutoLogin) {
+            $this->restoreFromCookie();
+        } elseif ($this->autoRenewCookie && $this->allowAutoLogin) {
+            $this->renewCookie();
         }
-        $this->setUser($user);
+
+        if ($this->getIsGuest()) {
+            $guest = new User();
+            $guest->setAttributes([
+                'username' => 'Guest',
+                'is_superuser' => false,
+                'is_staff' => false
+            ]);
+            $guest->setIsGuest(true);
+            $this->setModel($guest);
+        }
+
+        $this->updateAuthStatus();
+    }
+
+    public function onAuth($user)
+    {
+
+    }
+
+    public function getEventManager()
+    {
+        return Mindy::app()->signal;
+    }
+
+    public function getIsSuperUser()
+    {
+        return $this->getModel()->is_superuser;
     }
 
     /**
-     * @param bool $clearSession
-     * @internal param bool $total Clear all session
+     * Renews the identity cookie.
+     * This method will set the expiration time of the identity cookie to be the current time
+     * plus the originally specified cookie duration.
+     * @since 1.1.3
      */
-    public function logout($clearSession = true)
+    protected function renewCookie()
     {
-        $this->removeSession($clearSession);
-        $this->removeCookie();
-        $this->_user = null;
-    }
-
-    public function getUser()
-    {
-        if (!$this->_user) {
-            $this->_user = $this->fetchUser();
-        }
-        return $this->_user;
-    }
-
-    public function setUser($user)
-    {
-        $this->_user = $user;
-        $this->updateCookie($user);
-        $this->updateSession($user);
-    }
-
-    public function fetchUser()
-    {
-        $user = null;
-
-        if (!Cli::isCli()) {
-            $user = $this->getSessionUser();
-            if (!$user) {
-                if ($user = $this->getCookieUser()) {
-                    $this->updateSession($user);
-                }
+        $request = Mindy::app()->getComponent('request');
+        $cookies = $request->cookies;
+        $cookie = $cookies->itemAt($this->getStateKeyPrefix());
+        if ($cookie && !empty($cookie->value) && ($data = Mindy::app()->getSecurityManager()->validateData($cookie->value)) !== false) {
+            $data = @unserialize($data);
+            if (is_array($data) && isset($data[0], $data[1])) {
+                list($id, $duration) = $data;
+                $model = $this->loadModel($id);
+                $model->setIsGuest(false);
+                $this->saveToCookie($model, $duration);
             }
         }
-
-        if (!$user) {
-            $class = $this->class;
-            $user = new $class();
-        }
-
-        return $user;
     }
 
     /**
-     * Find user in database by id or login
-     *
-     * @param int|string $id
-     * @return mixed
+     * Updates the authentication status according to {@link authTimeout}.
+     * If the user has been inactive for {@link authTimeout} seconds, or {link absoluteAuthTimeout} has passed,
+     * he will be automatically logged out.
+     * @since 1.1.7
      */
-    public function findUser($id)
+    protected function updateAuthStatus()
     {
-        $class = $this->class;
-        /** @var UserModel $class */
-        return $class::objects()->filter(['login' => $id])->limit(1)->get();
-    }
+        if (($this->authTimeout !== null || $this->absoluteAuthTimeout !== null) && !$this->getIsGuest()) {
+            $expires = $this->getState(self::AUTH_TIMEOUT_VAR);
+            $expiresAbsolute = $this->getState(self::AUTH_ABSOLUTE_TIMEOUT_VAR);
 
-    public function getSessionUser()
-    {
-        $id = $this->getSession();
-        if ($id) {
-            return $this->findUser($id);
+            if ($expires !== null && $expires < time() || $expiresAbsolute !== null && $expiresAbsolute < time()) {
+                $this->logout(false);
+            } else {
+                $this->setState(self::AUTH_TIMEOUT_VAR, time() + $this->authTimeout);
+            }
         }
-        return null;
     }
 
-    public function getCookieUser()
+    /**
+     * Logs out the current user.
+     * This will remove authentication-related session data.
+     * If the parameter is true, the whole session will be destroyed as well.
+     * @param boolean $destroySession whether to destroy the whole session. Defaults to true. If false,
+     * then {@link clearStates} will be called, which removes only the data stored via {@link setState}.
+     */
+    public function logout($destroySession = true)
     {
-        $cookie = $this->getCookie();
-        if ($cookie) {
-            $data = explode(':', $cookie);
-            if (count($data) == 2) {
-                $id = $data[0];
-                $key = $data[1];
+        if ($this->allowAutoLogin) {
+            Mindy::app()->request->cookies->remove($this->getStateKeyPrefix());
+            if ($this->identityCookie !== null) {
+                $cookie = $this->createIdentityCookie($this->getStateKeyPrefix());
+                $cookie->value = null;
+                $cookie->expire = 0;
+                Mindy::app()->request->cookies->add($cookie->name, $cookie);
+            }
+        }
+        if ($destroySession) {
+            Mindy::app()->getSession()->destroy();
+        }
+        $this->cleanModel();
+    }
 
-                $user = $this->findUser($id);
-                if ($user && password_verify($user->email . $user->password, $key)) {
-                    return $user;
+    public function cleanModel()
+    {
+        $this->_model = null;
+        return $this;
+    }
+
+    public function loadModel($id)
+    {
+        $modelClass = $this->modelClass;
+        return $modelClass::objects()->filter(['pk' => $id])->get();
+    }
+
+    /**
+     * Populates the current user object with the information obtained from cookie.
+     * This method is used when automatic login ({@link allowAutoLogin}) is enabled.
+     * The user identity information is recovered from cookie.
+     * Sufficient security measures are used to prevent cookie data from being tampered.
+     * @see saveToCookie
+     */
+    protected function restoreFromCookie()
+    {
+        $app = Mindy::app();
+        $request = $app->request;
+        $cookie = $request->cookies->get($this->getStateKeyPrefix());
+        if ($cookie && !empty($cookie->value) && is_string($cookie->value) && ($data = $app->getSecurityManager()->validateData($cookie->value)) !== false) {
+            $data = @unserialize($data);
+            if (is_array($data) && isset($data[0], $data[1])) {
+                list($id, $duration) = $data;
+                if ($model = $this->loadModel($id)) {
+                    $model->setIsGuest(false);
+                    $this->setModel($model);
+
+                    if ($this->autoRenewCookie) {
+                        $this->saveToCookie($model, $duration);
+                    }
                 }
             }
         }
-        return null;
     }
 
-    public function updateSession( $user)
+    public function getStorage()
     {
-        $this->setSession($user->login);
+        return Mindy::app()->session;
     }
 
-    public function updateCookie( $user)
+    public function login(Model $model, $duration = null)
     {
-        $value = implode(':', [$user->id, password_hash($user->email . $user->password, PASSWORD_DEFAULT)]);
-        $this->setCookie($value);
+        $model->last_login = time();
+        $model->save(['last_login']);
+
+        if ($duration === null) {
+            $duration = Mindy::app()->getModule('User')->loginDuration;
+        }
+        $this->saveToCookie($model, $duration);
+
+        if ($this->absoluteAuthTimeout) {
+            $this->getStorage()->add(self::AUTH_ABSOLUTE_TIMEOUT_VAR, time() + $this->absoluteAuthTimeout);
+        }
+
+        $model->setIsGuest(false);
+        $this->setModel($model);
+        $this->getEventManager()->send($this, 'onAuth', $model);
+
+        $this->recordAction(UserModule::t('User {name} logged in', [
+            '{name}' => (string)$model
+        ]), $model->getModuleName());
+
+        return !$this->getIsGuest();
     }
 
-    public function setSession($session)
+    /**
+     * Check user is guest
+     * @return bool
+     */
+    public function getIsGuest()
     {
-        Xcart::app()->request->session->add($this->authSessionName, $session);
+        $model = $this->getModel();
+        return $model === null || $model->getIsGuest();
     }
 
-    public function getSession()
+    /**
+     * Creates a cookie to store identity information.
+     * @param string $name the cookie name
+     * @return Cookie the cookie used to store identity information
+     */
+    protected function createIdentityCookie($name)
     {
-        return Xcart::app()->request->session->get($this->authSessionName);
+        $cookie = new Cookie($name, '');
+        if (is_array($this->identityCookie)) {
+            foreach ($this->identityCookie as $name => $value) {
+                $cookie->$name = $value;
+            }
+        }
+        return $cookie;
     }
 
-    public function removeSession($clearSession = true)
+    /**
+     * @return string a prefix for the name of the session variables storing user session data.
+     */
+    public function getStateKeyPrefix()
     {
-        if ($clearSession) {
-            Xcart::app()->request->session->destroy();
+        if (!$this->_keyPrefix) {
+            $this->_keyPrefix = md5(get_class($this) . '.' . Mindy::app()->getId());
+        }
+        return $this->_keyPrefix;
+    }
+
+    /**
+     * Saves necessary user data into a cookie.
+     * This method is used when automatic login ({@link allowAutoLogin}) is enabled.
+     * This method saves user ID, username, other identity states and a validation key to cookie.
+     * These information are used to do authentication next time when user visits the application.
+     * @param \Mindy\Orm\Model $model
+     * @param integer $duration number of seconds that the user can remain in logged-in status. Defaults to 0, meaning login till the user closes the browser.
+     * @see restoreFromCookie
+     */
+    protected function saveToCookie(Model $model, $duration)
+    {
+        $app = Mindy::app();
+        $cookie = $this->createIdentityCookie($this->getStateKeyPrefix());
+        $cookie->expire = time() + $duration;
+        $cookie->value = $app->getSecurityManager()->hashData(serialize([$model->pk, $duration]));
+        $app->request->cookies->add($cookie->name, $cookie);
+    }
+
+    public function setModel(Model $model)
+    {
+        $this->_model = $model;
+        return $this;
+    }
+
+    public function getModel()
+    {
+        return $this->_model;
+    }
+
+    /**
+     * @param $name
+     * @throws Exception
+     * @return \Modules\User\PasswordHasher\IPasswordHasher
+     */
+    public function getPasswordHasher($name)
+    {
+        if (isset($this->passwordHashers[$name])) {
+            if (!isset($this->_passwordHashers[$name])) {
+                $this->_passwordHashers[$name] = Creator::createObject([
+                    'class' => $this->passwordHashers[$name]
+                ]);
+            }
+
+            return $this->_passwordHashers[$name];
         } else {
-            Xcart::app()->request->session->remove($this->authSessionName);
+            throw new Exception("Unknown password hasher");
         }
-    }
-    
-    public function setCookie($cookie)
-    {
-        Xcart::app()->request->cookie->add($this->authCookieName, $cookie, time() + $this->expire, '/');
-    }
-    
-    public function getCookie()
-    {
-        return Xcart::app()->request->cookie->get($this->authCookieName);
-    }
-
-    public function removeCookie()
-    {
-        Xcart::app()->request->cookie->remove($this->authCookieName);
     }
 }

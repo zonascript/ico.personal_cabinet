@@ -1,0 +1,65 @@
+.user-action-list {
+  @include reset-list;
+  margin-top: 20px;
+  padding-left: 14px;
+
+  &.admin {
+    padding: 0;
+    margin: 0;
+
+    li {
+      padding: 4px 0;
+      margin-bottom: 6px;
+    }
+  }
+
+  li {
+    padding: 8px 0 10px 30px;
+    position: relative;
+
+    &.last {
+      border-left: none;
+    }
+
+    .icon {
+      @include border-radius(32px);
+      position: absolute;
+      left: -16px;
+      top: 0;
+      width: 32px;
+      height: 32px;
+      display: block;
+      background-color: #fff;
+      border: 1px solid #ccc;
+    }
+
+    p {
+      line-height: 16px;
+      font-size: 13px;
+      color: $darkGrey;
+      margin-bottom: 6px;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+      border-bottom: 1px solid $darkGrey;
+    }
+
+    .datetime {
+      @include antialias();
+      font-style: italic;
+      color: $semiDarkGrey;
+    }
+
+    .user {
+      color: #a00;
+    }
+  }
+}
+
+.user-actions-empty {
+  font-size: 13px;
+  color: $darkGrey;
+  line-height: 1.3;
+}

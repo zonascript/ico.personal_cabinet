@@ -1,0 +1,3 @@
+User-agent: *
+Sitemap: {{ model.getAbsoluteUrl() }}/sitemap.xml
+Host: {{ model.domain }}

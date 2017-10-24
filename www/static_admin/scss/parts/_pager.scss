@@ -1,0 +1,40 @@
+.pager-container, .pager-holder {
+  @include clearfix;
+
+  .pager {
+    @include reset-list;
+    @include clearfix;
+    text-align: center;
+
+    li {
+      @include inline-block;
+      margin: 0 2px;
+
+      span, a {
+        padding: 5px 6px;
+        color: #353535;
+        border: 1px solid transparent;
+
+        &:hover, &.selected {
+          @include border-radius(3px);
+          border: 1px solid $semiSoftGrey;
+        }
+
+        &.selected {
+          color: $darkGrey;
+          cursor: not-allowed;
+        }
+      }
+    }
+  }
+
+  .page-size {
+    select {
+      height: 30px;
+      background-color: $lightGrey;
+      border: none;
+      padding: 5px 10px;
+      padding-right: 20px;
+    }
+  }
+}

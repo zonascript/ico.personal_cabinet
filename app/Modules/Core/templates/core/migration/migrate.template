@@ -1,0 +1,18 @@
+<?php
+
+namespace {{ namespace|safe }};
+
+use Mindy\Query\Migration;
+
+class {{ name|safe }} extends Migration
+{
+    public function safeUp()
+    {
+{{ safeUp|safe }}
+    }
+
+    public function safeDown()
+    {
+{{ safeDown|safe }}
+    }
+}

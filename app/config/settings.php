@@ -1,146 +1,141 @@
 <?php
-(defined('DS')?:define('DS', DIRECTORY_SEPARATOR));
-//defined('APP_DEBUG')?:define('APP_DEBUG', true);
 
-$local_config = __DIR__ . DS .'settings_local.php';
+use Mindy\Helper\Params;
+use Mindy\Template\Renderer;
+use Mindy\Helper\Console;
 
-return array_replace_recursive([
-   'name' => 'Xcart',
-   'exit_on_end' => true,
-   'paths' => [
-       'base' => realpath(implode(DS, [__DIR__, '..'])),
-       'www' => realpath(implode(DS, [__DIR__, '..', '..', 'www'])),
-       'media' => realpath(implode(DS, [__DIR__, '..', '..', 'www', 'media'])),
-   ],
-   'modules' => include __DIR__ . DS . 'modules.php',
-   'locale' => [
-       'language' => 'en',
-       'sourceLanguage' => 'en',
-       'charset' => 'utf-8',
-   ],
-   'globals' => [
-        'blowfish_key' => '8d5db63ada15e11643a0b1c3477c2c5c',
-        'blowfish' => new \ctBlowfish(),
-   ],
-   'components' => [
-       'db' => [
-           'class' => '\\Xcart\\App\\Orm\\ConnectionManager',
-           'connections' => [
-               'default' => [
-                   'memory' => true,
-                   'autoCommit' => true,
-                   'driver' => 'pdo_mysql',
-                   'dbname' => 'akara_lk',
-                   'host' => '127.0.0.1',
-                   'user' => 'ico',
-                   'password' => '',
-                   'charset'  => 'utf8',
-                   'mapping' => [
-                       'enum' => 'string'
-                   ],
-                   'cache' => [
-                       'class' => '\\Xcart\\App\\Orm\\Cache\\FilesystemCache',
-                       'directory' => 'base.runtime.query_cache'
-                   ]
-               ]
-           ]
-       ],
-       'errorHandler' => [
-           'class' => '\\Xcart\\App\\Main\\ErrorHandler',
-           'useTemplate' => true,
-           'debug' => false,
-           'errHandler' => true,
-           'ignoreDeprecated' => true,
-       ],
-       'event' => [
-           'class' => '\\Xcart\\App\\Event\\EventManager',
-           'events' => include __DIR__ . DS .  'events.php'
-       ],
+return [
+    'basePath' => dirname(__FILE__) . '/../',
+    'name' => 'Mindy',
+    'behaviors' => [
+        'ParamsCollectionBehavior' => [
+            'class' => '\Mindy\Base\ParamsCollectionBehavior'
+        ],
+    ],
+    'managers' => [
+        'qwe@qwe.com'
+    ],
+    'locale' => [
+        'language' => 'en',
+        'sourceLanguage' => 'en',
+        'charset' => 'utf-8',
+    ],
+    'errorHandler' => [
+        'useTemplate' => true
+    ],
+    'components' => [
+        'middleware' => [
+            'class' => '\Mindy\Middleware\MiddlewareManager',
+            'middleware' => [
+                'CurrentSiteMiddleware' => [
+                    'class' => '\Modules\Sites\Middleware\CurrentSiteMiddleware'
+                ],
+                'RedirectMiddleware' => [
+                    'class' => '\Modules\Redirect\Middleware\RedirectMiddleware'
+                ],
+            ]
+        ],
 
-       'finder' => ['class' => '\Xcart\App\Finder\FinderFactory'],
-       'auth' => ['class' => 'Modules\User\Components\Auth'],
-       'breadcrumbs' => ['class' => 'Xcart\App\Components\Breadcrumbs'],
-       'flash' => ['class' => '\Xcart\App\Components\Flash'],
+        'signal' => [
+            'class' => '\Mindy\Event\EventManager',
+            'events' => dirname(__FILE__) . DIRECTORY_SEPARATOR . 'events.php',
+        ],
 
-       'logger' => include __DIR__. DS . 'logger.php',
-
-       'middleware' => [
-           'class' => '\\Xcart\\App\\Middleware\\MiddlewareManager',
-           'middleware' => [
-               'RedirectConfirmationMiddleware' => [
-                   'class' => '\Modules\Main\Middleware\RedirectConfirmationMiddleware',
-               ],
-               'BotsMiddleware' => [
-                   'class' => '\\Modules\\User\\Middleware\\BotsMiddleware',
-               ],
-               'AjaxRedirectMiddleware' => [
-                   'class' => '\\Modules\\Core\\Middleware\\AjaxRedirectMiddleware',
-               ],
-               'AutoCacheMiddleware' => [
-                   'class' => '\\Modules\\Core\\Middleware\\CacheMiddleware',
-               ],
-//               'ReferrerSearch' => [
-//                   'class' => '\\Modules\\User\\Middleware\\ReferrerSearchMiddleware'
-//               ],
-           ],
-       ],
-       'request' => [
-           'class' => '\\Xcart\\App\\Request\\RequestManager',
-           'httpRequest' => [
-               'class' => '\\Xcart\\App\\Request\\HttpRequest',
-               'session' => [
-                   'class' => '\\Modules\\User\\Components\\XcartSession',
-                   'session_key' => 's3'
-               ]
-           ],
-           'cliRequest' => [
-               'class' => '\\Xcart\\App\\Request\\CliRequest',
-           ]
-       ],
-       'router' => [
-           'class' => '\\Xcart\\App\\Router\\Router',
-           'pathRoutes' => 'base.config.routes'
-       ],
-       'template' => [
-           'class' => '\\Xcart\\App\\Template\\TemplateManager',
-           'forceCompile' => false,
-           'forceInclude' => true,
-           'autoReload' => false,
-           'autoEscape' => false,
-       ],
-
-       'storage' => [
-           'class' => '\\Xcart\\App\\Storage\\Storage',
-           'default' => 'local',
-           'adapters' => [
-               'local' => [
-                   'class' => '\\Xcart\\App\\Storage\\Adapters\\LocalAdapter',
-                   'root' => 'media',
-               ],
-           ],
-       ],
-       'cache' => [
-           'class' => '\\Xcart\\App\\Cache\\Cache',
-           'saveInMemory' => true,
-           'memoryDriver' => 'memory',
-           'drivers' => [
-               'default' =>  [
-                   'class' => '\\Xcart\\App\\Cache\\Drivers\\File'
-               ],
-               'memory' =>  [
-                   'class' => '\\Xcart\\App\\Cache\\Drivers\\Memory',
-                   'numCacheQuery' => 30,
-               ]
-           ]
-       ],
-       'mail' => [
-           'class' => '\\Modules\\Mail\\Components\\Mailer',
-//           'defaultFrom' => 'robot@{domain}',
-           'defaultFrom' => 'robot@s3stores.com',
-       ],
-   ],
-   'autoloadComponents' => [
-       'errorHandler',
-       'logger',
-   ]
-],  (is_file($local_config)) ? include $local_config : []);
+        'db' => [
+            'class' => '\Mindy\Query\ConnectionManager',
+            'databases' => [
+                'default' => [
+                    'class' => '\Mindy\Query\Connection',
+                    'dsn' => 'mysql:host=127.0.0.1;dbname=db',
+                    'username' => 'user',
+                    'password' => 'password',
+                    'charset' => 'utf8',
+                ]
+            ]
+        ],
+        'permissions' => [
+            'class' => '\Modules\User\Components\Permissions'
+        ],
+        'mail' => [
+            'class' => '\Modules\Mail\Components\DbMailer',
+        ],
+        'finder' => [
+            'class' => '\Mindy\Finder\FinderFactory',
+        ],
+        'authManager' => [
+            'class' => '\Modules\User\Components\Permissions\PermissionManager',
+        ],
+        'authGenerator' => [
+            'class' => 'MPermissionGenerator'
+        ],
+        'request' => [
+            'class' => '\Mindy\Http\Request',
+            'enableCsrfValidation' => false
+        ],
+        'auth' => [
+            'class' => '\Modules\User\Components\Auth',
+            'allowAutoLogin' => true,
+            'autoRenewCookie' => true,
+        ],
+        'cache' => [
+            'class' => '\Mindy\Cache\DummyCache'
+        ],
+        'storage' => [
+            'class' => '\Mindy\Storage\FileSystemStorage',
+        ],
+        'template' => [
+            'class' => '\Mindy\Template\Renderer',
+            'mode' => MINDY_DEBUG ? Renderer::RECOMPILE_ALWAYS : Renderer::RECOMPILE_NEVER,
+        ],
+        'session' => [
+            'class' => '\Modules\User\Components\UserSession',
+            'sessionName' => 'mindy',
+            'autoStart' => !Console::isCli()
+        ],
+        'generator' => [
+            'class' => '\Mindy\Base\Generator'
+        ],
+        'logger' => [
+            'class' => '\Mindy\Logger\LoggerManager',
+            'handlers' => [
+                'default' => [
+                    'class' => MINDY_DEBUG ? '\Mindy\Logger\Handler\RotatingFileHandler' : '\Mindy\Logger\Handler\NullHandler',
+                    'level' => MINDY_DEBUG ? "DEBUG" : "ERROR"
+                ],
+                'null' => [
+                    'class' => '\Mindy\Logger\Handler\NullHandler',
+                    'level' => 'ERROR'
+                ],
+                'console' => [
+                    'class' => '\Mindy\Logger\Handler\StreamHandler',
+                ],
+                'users' => [
+                    'class' => '\Mindy\Logger\Handler\RotatingFileHandler',
+                    'alias' => 'application.runtime.users',
+                    'level' => 'INFO',
+                    'formatter' => 'users'
+                ],
+                'mail_admins' => [
+                    'class' => '\Mindy\Logger\Handler\SwiftMailerHandler',
+                ],
+            ],
+            'formatters' => [
+                'users' => [
+                    'class' => '\Mindy\Logger\Formatters\LineFormatter',
+                    'format' => "%datetime% %message%\n"
+                ]
+            ],
+            'loggers' => [
+                'users' => [
+                    'class' => '\Monolog\Logger',
+                    'handlers' => ['users'],
+                ],
+            ]
+        ],
+    ],
+    'preload' => [
+        'logger',
+        'db',
+    ],
+    'modules' => include(__DIR__ . '/modules.php')
+];

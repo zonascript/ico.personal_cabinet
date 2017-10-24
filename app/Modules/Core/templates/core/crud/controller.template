@@ -1,0 +1,13 @@
+<?php
+
+namespace Modules\{{ module }}\Controllers;
+
+use Modules\Core\Controllers\Controller;
+
+class {{ name }}Controller extends Controller
+{
+	public function actionIndex()
+	{
+		echo $this->render("{{ module }}/{{ name }}/index.html");
+	}
+}

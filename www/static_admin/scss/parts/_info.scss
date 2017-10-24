@@ -1,0 +1,50 @@
+.model-info {
+  thead, tbody {
+    & > tr {
+      background-color: #fff !important;
+      border-bottom: 1px solid #f1f1f1;
+    }
+
+    tr {
+      td {
+        &.first {
+          width: 250px;
+        }
+
+        &.nested {
+          padding: 0 !important;
+          border: 0;
+
+          .nested-container {
+            background-color: #f1f1f1;
+            position: relative;
+            padding: 10px;
+
+            &::after {
+              bottom: 100%;
+              right: 25px;
+              border: solid transparent;
+              content: " ";
+              height: 0;
+              width: 0;
+              position: absolute;
+              pointer-events: none;
+              border-color: rgba(241, 241, 241, 0);
+              border-bottom-color: #f1f1f1;
+              border-width: 8px;
+              margin-left: -8px;
+            }
+
+            table {
+              border: 0;
+
+              tr td, tr th {
+                background-color: #f1f1f1;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

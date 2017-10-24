@@ -2,24 +2,21 @@
 
 namespace Modules\Meta\Forms;
 
+use Mindy\Form\Fields\CheckboxField;
+use Mindy\Form\Fields\TextAreaField;
+use Mindy\Form\Fields\TextField;
+use Mindy\Form\ModelForm;
 use Modules\Meta\MetaModule;
 use Modules\Meta\Models\Meta;
-use Xcart\App\Form\Fields\CheckboxField;
-use Xcart\App\Form\Fields\TextAreaField;
-use Xcart\App\Form\Fields\TextField;
-use Xcart\App\Form\ModelForm;
 
 class MetaCreateForm extends ModelForm
 {
-    /**
-     * @return array
-     */
     public function getFields()
     {
         return [
             'is_custom' => [
                 'class' => CheckboxField::className(),
-                'label' => MetaModule::t('Is custom'),
+                'label' => MetaModule::t('Is custom')
             ],
             'title' => [
                 'class' => TextField::className(),

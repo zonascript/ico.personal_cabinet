@@ -1,0 +1,35 @@
+{% extends 'admin/base.html' %}
+
+{% block heading %}
+    <h1>{{ admin.getVerboseNameUpdate(model) }}</h1>
+{% endblock %}
+
+{% block content_class %}update{% endblock %}
+
+{% block content %}
+    <form action="" method="post" enctype="multipart/form-data" class="clearfix save-update">
+        {% csrf_token %}
+
+        {{ form.asUl()|raw }}
+
+        <fieldset>
+            <legend>Изменение пароля</legend>
+            <p>Для изменения пароля <a href="{% url 'admin:changepassword' form.instance.pk %}">перейдите по ссылке</a></p>
+        </fieldset>
+
+        <div class="buttons-block">
+            <input type="submit" class="button" name="save" value="{{ t('Save', 'admin') }}"/>
+            <input type="submit" class="button transparent" name="save_continue" value="{{ t('Save and continue', 'admin') }}"/>
+
+
+            {% if model %}
+                <div class="right">
+                    {% if method_exists(model, "getAbsoluteUrl") %}
+                        <a class="button transparent" href="{{ form.getInstance().getAbsoluteUrl() }}" target="_blank">{{ t('View at site', 'admin') }}</a>
+                    {% endif %}
+                    <input type="submit" class="button transparent" data-confirm="Вы действительно хотите удалить?" name="delete" value="{{ t('Delete', 'admin') }}"/>
+                </div>
+            {% endif %}
+        </div>
+    </form>
+{% endblock %}

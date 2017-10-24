@@ -1,0 +1,36 @@
+{%- for name, field in model.getFieldsInit() -%}
+    <span style="font-weight: bold;">
+        {%- if field.verboseName -%}
+            {{ field.verboseName }}: 
+        {%- else -%}
+            {%- if name == 'id' -%}
+                {{ t('Number / identifier', 'admin') }}: 
+            {%- else -%}
+                {{ name|capitalize }}: 
+            {%- endif -%}
+        {%- endif -%}
+    </span>
+    <span>
+        {%- set value = model.getField(name).getValue() -%}
+        {%- if field.choices -%}
+            {{ field.choices[value] }}
+        {%- elseif field.className == 'Mindy\\Orm\\Fields\\BooleanField' -%}
+            {%- if value -%}{{ t('Yes', 'admin') }}{%- else -%}{{ t('No', 'admin') }}{%- endif -%}
+        {%- elseif field.className == 'Mindy\\Orm\\Fields\\DateTimeField' -%}
+            {% if value %}{{ value|date('d.m.Y H:i') }}{% endif %}
+        {%- elseif field.className == 'Mindy\\Orm\\Fields\\DateField' -%}
+            {% if value %}{{ value|date('d.m.Y') }}{% endif %}
+        {%- elseif field.className == 'Mindy\\Orm\\Fields\\ForeignField' and method_exists(model[name], 'getAbsoluteUrl') %}
+            <a href="{{ request.http.hostInfo }}{{ model[name].getAbsoluteUrl() }}">{{ model[name] }}</a>
+        {%- elseif field.className == 'Mindy\\Orm\\Fields\\TreeForeignField' and method_exists(model[name], 'getAbsoluteUrl') %}
+            <a href="{{ request.http.hostInfo }}{{ model[name].getAbsoluteUrl() }}">{{ model[name] }}</a>
+        {%- else -%}
+            {%- if field.className == 'Mindy\\Orm\\Fields\\FileField' -%}
+                <a href="{{ request.http.hostInfo }}/media/{{ value }}">{{ value }}</a>
+            {%- else -%}
+                {{ value|raw }}
+            {%- endif -%}
+        {%- endif -%}
+   </span>
+   <br/>
+{%- endfor -%}

@@ -1,27 +1,19 @@
 {
-  "name": "static",
-  "directory": "./vendors",
-  "license": "ISC",
-  "private": true,
-  "ignore": [
-    "**/.*",
-    "node_modules",
-    "bower_components",
-    "vendors"
-  ],
+  "name": "foundation-libsass-template",
   "dependencies": {
-    "jquery": "^3.1.1",
-    "jquery.cookie": "jquery-cookie#^1.4.1",
-    "mmodal": "git://github.com/tsukasa-mixer/mmodal.git",
-    "compass-mixins": "^v0.12",
+    "foundation": "5.4.2",
     "mindy-sass": "*",
-    "lato-webfont": "^1.1.2",
-    "foundation-sites": "^6.3.1",
-    "jQuery.dotdotdot": "dotdotdot#^1.8.3",
-    "Waves": "waves#^0.7.5",
-    "PACE": "pace#^1.0.2",
-    "bourbon": "^4.3.4",
-    "webfontloader": "^1.6.28"
+    "fancybox": "~2.1.5",
+    "jquery.inputmask": "~3.1.0",
+    "slick-carousel": "~1.5.5",
+    "jquery": "~2.1.1",
+    "jquery-form": "~3.46.0",
+    "sticky-kit": "~1.0.4",
+    "animate.css": "~3.2.0",
+    "pace": "~1.0.1",
+    "underscore": "~1.7.0",
+    "mmodal": "~1.0.5",
+    "fotorama": "~4.6.4"
   },
   "devDependencies": {}
 }

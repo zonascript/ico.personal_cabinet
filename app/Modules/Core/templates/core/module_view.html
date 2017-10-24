@@ -1,0 +1,6 @@
+{% extends request.is_ajax ? "admin/ajax.html" : "admin/base.html" %}
+
+{% block content %}
+    <h1>{{ data.human_name }}</h1>
+    {{ data.description }}
+{% endblock %}

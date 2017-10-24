@@ -1,1 +1,0 @@
-{include "demo/blocks/_footer.tpl"}

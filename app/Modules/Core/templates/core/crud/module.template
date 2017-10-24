@@ -1,0 +1,35 @@
+<?php
+
+namespace Modules\{{ module }};
+
+use Mindy\Base\Module;
+
+class {{ module }}Module extends Module
+{
+    public static function preConfigure()
+    {
+
+    }
+
+    public function getMenu()
+    {
+        return [
+            'name' => $this->getName(),
+            'items' => [
+                /*
+                [
+                    'name' => self::t('Foo admin'),
+                    'url' => '{{ module|lower }}:foo'
+                    // or
+                    'adminClass' => 'FooAdmin',
+                ],
+                */
+            ]
+        ];
+    }
+
+    public function getVersion()
+    {
+        return 1.0;
+    }
+}

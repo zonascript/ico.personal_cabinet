@@ -1,0 +1,172 @@
+.file-manager {
+  position: relative;
+  padding-top: 7px;
+  min-width: 980px;
+
+  &.drop {
+    .drop-info {
+      display: inline-block;
+    }
+  }
+
+  &.uploading {
+    .uploading-info {
+      display: inline-block;
+    }
+
+    .progress {
+      margin-top: 20px;
+    }
+  }
+
+  .drop-info, .uploading-info{
+    display: none;
+
+    text-align: center;
+    position: absolute;
+    z-index: 100;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 0;
+    background-color: rgba(255, 255, 255, 0.8);
+    border: 2px dashed #57b2d8;
+
+    .info-table{
+      display: table;
+      height: 100%;
+      width: 100%;
+
+      .cell{
+        display: table-cell;
+        vertical-align: middle;
+      }
+    }
+  }
+
+  table {
+    tr {
+      .file-icon{
+        width: 35px;
+      }
+
+      .file-check{
+        width: 35px;
+        vertical-align: middle;
+        padding-left: 0;
+
+        input {
+          margin: 0;
+        }
+      }
+
+      .file-name {
+        cursor: pointer;
+        padding: 0 !important;
+
+        a {
+          display: block;
+        }
+      }
+
+      .file-actions{
+        width: 35px;
+      }
+    }
+    a {
+      text-decoration: none;
+    }
+  }
+
+  .actions-row {
+    max-width: none;
+    margin: 0 -15px;
+  }
+
+  .messages {
+    @include transition(all 0.4s);
+
+    .notification {
+      @include border-radius(5px);
+      margin-bottom: 7px;
+      padding: 8px 15px;
+      color: #fff;
+      @include antialias;
+      font-size: 14px;
+
+      &.message {
+        background-color: #57b2d8;
+      }
+
+      &.error {
+        background-color: #f04124;
+      }
+
+    }
+  }
+}
+
+.files-frop {
+  border: 2px dashed #ddd;
+  padding: 20px;
+  margin-bottom: 20px;
+
+  .info {
+    margin-bottom: 10px;
+    text-align: center;
+  }
+
+  .progress {
+    border: none;
+    padding: 0;
+    margin: 0;
+    .progress_bar{
+      @include border-radius(5px);
+      height: 4px;
+      background: $midBlue;
+      width: 0%;
+    }
+  }
+
+  input {
+    width: auto;
+  }
+}
+
+.image-field-list {
+  li {
+    display: inline-block;
+    position: relative;
+
+    img {
+      vertical-align: middle;
+      display: inline-block;
+      width: 100%;
+      cursor: move;
+    }
+
+    .remove {
+      @include border-radius(10px);
+      cursor: pointer;
+      position: absolute;
+      top: 3px;
+      right: 13px;
+      display: block;
+
+      font-size: 20px;
+      line-height: 16px;
+      height: 20px;
+      width: 20px;
+      text-align: center;
+
+      background-color: #fff;
+
+    }
+
+    &.empty {
+      border: 2px dashed #ccc;
+      min-height: 150px;
+    }
+  }
+}

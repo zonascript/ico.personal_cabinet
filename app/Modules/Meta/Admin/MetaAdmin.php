@@ -2,13 +2,13 @@
 
 namespace Modules\Meta\Admin;
 
-use Modules\Admin\Contrib\Admin;
+use Mindy\Base\Mindy;
+use Modules\Admin\Components\ModelAdmin;
 use Modules\Meta\Forms\MetaForm;
 use Modules\Meta\MetaModule;
 use Modules\Meta\Models\Meta;
-use Xcart\App\Main\Xcart;
 
-class MetaAdmin extends Admin
+class MetaAdmin extends ModelAdmin
 {
     public function getSearchFields()
     {
@@ -18,7 +18,7 @@ class MetaAdmin extends Admin
     public function getColumns()
     {
         $columns = ['title', 'url'];
-        if (Xcart::app()->getModule('Meta')->onSite) {
+        if (Mindy::app()->getModule('Meta')->onSite) {
             $columns[] = 'site';
         }
         return $columns;
@@ -29,12 +29,17 @@ class MetaAdmin extends Admin
         return new Meta;
     }
 
-    public function getForm()
+    public function getCreateForm()
     {
-        return new MetaForm;
+        return MetaForm::className();
     }
 
-    public static function getName()
+    public function getVerboseName()
+    {
+        return MetaModule::t('Meta information');
+    }
+
+    public function getVerboseNamePlural()
     {
         return MetaModule::t('Meta information');
     }

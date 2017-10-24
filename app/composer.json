@@ -1,0 +1,54 @@
+{
+    "name": "hindy/one",
+    "homepage": "http://studio107.ru",
+    "version": "1.0",
+    "type": "library",
+    "license": "BSD-3-Clause",
+    "autoload": {
+        "psr-4": {
+            "Modules\\": "Modules"
+        }
+    },
+    "config": {
+        "cache-files-ttl": 0
+    },
+    "require": {
+        "php": ">=5.4",
+        "hindy/orm": "0.*",
+        "hindy/cache": "0.*",
+        "hindy/base": "0.*",
+        "hindy/form": "0.*",
+        "hindy/pagination": "0.*",
+        "hindy/finder": "0.*",
+        "cebe/markdown": "*",
+        "hindy/router": "0.*",
+        "hindy/mail": "0.*",
+        "hindy/storage": "0.*",
+        "hindy/logger": "1.*",
+        "imagine/imagine": "^0.6.2",
+        "hindy/update": "0.*",
+        "hindy/template": "1.*",
+        "hindy/console": "0.*",
+        "hindy/controller": "0.*",
+        "hindy/security": "0.*",
+        "hindy/session": "0.*",
+        "hindy/event": "0.*",
+        "hindy/application": "0.*",
+        "hindy/tests": "0.*",
+        "hindy/table": "0.*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "3.7.32",
+        "phpunit/php-invoker": "1.1.3",
+        "phpunit/dbunit": "1.3.1",
+        "phpunit/phpunit-selenium": "1.3.3",
+        "phpunit/phpunit-story": "1.0.2",
+        "satooshi/php-coveralls": "dev-master"
+    },
+    "authors": [{
+        "name": "Maxim Falaleev",
+        "email": "max@studio107.ru",
+        "homepage": "http://studio107.ru",
+        "role": "Developer"
+    }]
+}

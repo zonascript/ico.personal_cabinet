@@ -1,0 +1,119 @@
+.breadcrumb-container {
+  .breadcrumb {
+    .section {
+      color: #353535;
+    }
+
+    i.icon {
+      float: none !important;
+    }
+
+    a {
+      &, &:hover {
+        color: #353535;
+      }
+    }
+  }
+
+  .ui.popup {
+    min-width: 200px;
+    padding: 10px 0;
+
+    .breadcrumb-nested-list {
+      @include reset-list;
+
+      li {
+        font-size: .9rem;
+
+        &:not(&:last-child) {
+          margin-bottom: 5px;
+        }
+
+        &:hover {
+          a {
+            background-color: #2575b0;
+            color: #fff;
+          }
+        }
+
+        a {
+          padding: 4px 10px;
+          display: block;
+          color: #353535;
+        }
+      }
+    }
+  }
+}
+
+#breadcrumbs {
+  $childPadding: 10px;
+
+  @include reset-list;
+  @include clearfix;
+  padding: $defaultPadding $defaultPadding 0 $defaultPadding;
+
+  li {
+    @include float-left;
+    margin-right: 12px;
+    font-size: 14px;
+    color: #777;
+    position: relative;
+
+    a {
+      color: #777;
+      text-decoration: none;
+    }
+
+    .children {
+      @include reset-list;
+      @include box-shadow(0 8px 24px rgba(0, 0, 0, 0.3));
+      @include border-radius(3px);
+      position: absolute;
+      left: -$childPadding;
+      top: 28px;
+      width: 200px;
+      background-color: #fff;
+      display: none;
+      padding: 8px 0;
+      z-index: 10000;
+
+      &:before{
+        content: '';
+        @include arrow-top();
+      }
+
+      li {
+        line-height: 16px;
+        display: block;
+        float: none;
+        padding: 0;
+        margin: 0;
+
+        &:hover {
+          background-color: $blue;
+          color: #fff;
+          a {
+            color: #fff;
+          }
+        }
+
+        a {
+          display: block;
+          padding: 6px $childPadding;
+          text-decoration: none;
+
+          &:hover {
+            border-bottom: none;
+          }
+        }
+      }
+    }
+
+    &:hover {
+      .children {
+        display: block;
+      }
+    }
+  }
+}

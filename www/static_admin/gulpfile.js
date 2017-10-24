@@ -1,125 +1,218 @@
-const gulp = require('gulp');
-const concat = require('gulp-concat');
-const cssnano = require('gulp-cssnano');
-const imagemin = require('gulp-imagemin');
-const livereload = require('gulp-livereload');
-const rimraf = require('gulp-rimraf');
-const sass = require('gulp-sass');
-const hashsum = require('gulp-hashsum');
-const uglify = require('gulp-uglify');
+var gulp = require('gulp');
 
-var config = require('./gulpconfig');
-var backend = config;
+var concat = require('gulp-concat'),
+    uglify = require('gulp-uglify'),
+    imagemin = require('gulp-imagemin'),
+    minifyCSS = require('gulp-minify-css'),
+    sass = require('gulp-sass'),
+    gulpif = require('gulp-if'),
+    argv = require('yargs').argv,
+    process = require('process'),
+    clean = require('gulp-clean'),
+    coffee = require('gulp-coffee'),
+    autoprefixer = require('gulp-autoprefixer'),
+    livereload = require('gulp-livereload');
 
-function buildVendorsData(vendors) {
-    var vendorsData = {};
-    for (var vendor in vendors) {
-        if (vendors.hasOwnProperty(vendor)) {
-            var vendorConfig = vendors[vendor];
-            for (var type in vendorConfig) {
-                if (vendorConfig.hasOwnProperty(type)) {
-                    var matches = vendorConfig[type];
-                    if (typeof vendorsData[type] == 'undefined') {
-                        vendorsData[type] = [];
-                    }
-                    if (typeof matches == 'string') {
-                        vendorsData[type].unshift(matches);
-                    } else {
-                        vendorsData[type] = [].concat(vendorsData[type], matches)
-                    }
-                }
-            }
-        }
-    }
-    return vendorsData;
-}
+var version = '1.0.0';
 
+var minifyOpts = {
 
-var backendVendorsData = buildVendorsData(backend.vendors);
-for (var vendorType in backendVendorsData) {
-    if (backendVendorsData.hasOwnProperty(vendorType)) {
-        if (!backend.src.hasOwnProperty(vendorType)) {
-            backend.src[vendorType] = [];
-        }
-        backend.src[vendorType] = [].concat(backendVendorsData[vendorType], backend.src[vendorType]);
-    }
-}
+};
 
+var imagesOpts = {
+    optimizationLevel: 5,
+    progressive: true,
+    interlaced: true
+};
 
-gulp.task('scss', function() {
-    return gulp.src(backend.src.scss)
-        .pipe(sass({
-            includePaths: backend.src.scss_include ? backend.src.scss_include : []
-        }).on('error', sass.logError))
-        .pipe(gulp.dest(backend.dst.scss));
-});
+var sassOpts = {
+    includePaths: [
+        'vendor/foundation/scss',
+        'vendor/mindy-sass/mindy'
+    ]
+};
 
+var dst = {
+    js: 'dist/js',
+    css: 'dist/css',
+    images: 'dist/images',
+    sass: './css',
+    fonts: 'dist/fonts',
+    wysiwyg: 'dist/ueditor107'
+};
 
-gulp.task('css', ['scss'], function() {
-    var pipe = gulp.src(backend.src.css);
-    if (config.compress) {
-        pipe = pipe.pipe(cssnano())
-    }
-    return pipe.pipe(concat(config.name + '.css')).
-    pipe(gulp.dest(backend.dst.css)).
-    pipe(hashsum({filename: 'versions/css.yml', hash: 'md5'})).
-    pipe(livereload());
-});
+var paths = {
+    js: [
+        'vendor/jquery/dist/jquery.min.js',
+        'vendor/modernizr/modernizr.js',
+        'vendor/jquery.cookie/jquery.cookie.js',
+        'vendor/fastclick/lib/fastclick.js',
+        'vendor/foundation/js/foundation.min.js',
+        'vendor/checkboxes.js/src/jquery.checkboxes.js',
+        'vendor/select2/select2.js',
+        'vendor/select2/select2_locale_ru.js',
+        'vendor/jquery-autosize/jquery.autosize.min.js',
+        'vendor/jquery-ui/ui/minified/jquery-ui.min.js',
+        'vendor/flow.js/dist/flow.js',
+        'vendor/Chart.js/Chart.js',
+        'vendor/mmodal/js/jquery.mindy.modal.js',
+        'vendor/fancybox/source/jquery.fancybox.pack.js',
+        'vendor/pickmeup/js/jquery.pickmeup.js',
+        'vendor/remarkable/dist/remarkable.js',
+        'vendor/jquery-form/jquery.form.js',
+        'vendor/perfect-scrollbar/js/perfect-scrollbar.jquery.js',
 
+        'vendor/underscore/underscore.js',
 
-gulp.task('js', function() {
-    var pipe = gulp.src(backend.src.js);
-    if (config.compress) {
-        pipe = pipe.pipe(uglify())
-    }
-    return pipe.pipe(concat(config.name + '.js')).
-    pipe(gulp.dest(backend.dst.js)).
-    pipe(hashsum({filename: 'versions/js.yml', hash: 'md5'})).
-    pipe(livereload());
-});
+        'vendor/meditor/js/utils.js',
+        'vendor/meditor/js/core.js',
+        'vendor/meditor/js/engine.js',
+        'vendor/meditor/js/editor.js',
+        'vendor/meditor/js/block.js',
+        'vendor/meditor/js/plugins/text/text.js',
+        'vendor/meditor/js/plugins/video.js',
+        'vendor/meditor/js/plugins/lost.js',
+        'vendor/meditor/js/plugins/space.js',
+        'vendor/meditor/js/plugins/image.js',
+        'vendor/meditor/js/plugins/map/map.js',
 
+        'vendor/semantic-ui/dist/components/checkbox.js',
+        'vendor/semantic-ui/dist/components/dropdown.js',
+        'vendor/semantic-ui/dist/components/popup.js',
+        'vendor/semantic-ui/dist/components/tab.js',
+        'vendor/semantic-ui/dist/components/transition.js',
 
-gulp.task('images', function() {
-    var pipe = gulp.src(backend.src.images);
-    if (config.compress) {
-        pipe = pipe.pipe(imagemin())
-    }
-    return pipe.pipe(gulp.dest(backend.dst.images)).pipe(livereload());
-});
+        // Emmet for ace.js
+        'components/emmet.js',
+
+        // Ace.js is adependency for mail templates and ueditor
+        'components/ace/ace.js',
+        'components/ace/theme-clouds.js',
+        'components/ace/theme-crimson_editor.js',
+        'components/ace/mode-html.js',
+        'components/ace/mode-css.js',
+        'components/ace/mode-javascript.js',
+        'components/ace/mode-twig.js',
+        'components/ace/worker-html.js',
+        'components/ace/worker-css.js',
+        'components/ace/worker-javascript.js',
+        'components/ace/ext-emmet.js',
+
+        // Codemirror is a dependency for ueditor
+        'vendor/codemirror/lib/codemirror.js',
+        'vendor/codemirror/mode/css/css.js',
+        'vendor/codemirror/mode/javascript/javascript.js',
+        'vendor/codemirror/mode/xml/xml.js',
+        'vendor/codemirror/mode/htmlmixed/htmlmixed.js',
+
+        // https://github.com/nightwing/emmet-core
+        'components/emmet.js',
+        'components/mtooltip/mtooltip.js',
+        'components/jquery.dragsort-0.5.2.min.js',
+
+        'js/*.js'
+    ],
+    coffee: 'js/**/*.coffee',
+    fonts: [
+        'fonts/glyphico/fonts/*{.eot,.woff,.woff2,.ttf,.svg}',
+        'fonts/lato/fonts/*{.eot,.woff,.woff2,.ttf,.svg}',
+        'fonts/semantic-ui/fonts/*{.eot,.woff,.woff2,.ttf,.svg}'
+    ],
+    images: 'images/**/*',
+    sass: [
+        'scss/**/*.scss'
+    ],
+    wysiwyg: 'vendor/ueditor107/dist/**/*',
+    css: [
+        'css/**/*.css',
+
+        'fonts/lato/css/style.css',
+        'fonts/glyphico/css/style.css',
+        'fonts/semantic-ui/style.css',
+
+        'vendor/meditor/css/editor.css',
+        'vendor/pen/src/pen.css',
+        'vendor/pickmeup/css/pickmeup.css',
+
+        'components/mtooltip/mtooltip.css'
+    ]
+};
+
+var uglifyOpts = {
+    mangle: false
+};
 
 gulp.task('fonts', function() {
-    return gulp.src(backend.src.fonts)
-        .pipe(gulp.dest(backend.dst.fonts)).pipe(livereload());
+    return gulp.src(paths.fonts)
+        .pipe(gulp.dest(dst.fonts));
 });
 
-
-gulp.task('raw', function() {
-    return gulp.src(backend.src.raw)
-        .pipe(gulp.dest(backend.dst.raw)).pipe(livereload());
+gulp.task('coffee', function() {
+    gulp.src(paths.coffee)
+        .pipe(coffee({
+            bare: true
+        }).on('error', function(err) {
+            console.log(err);
+        }))
+        .pipe(gulp.dest(dst.js))
 });
 
-gulp.task('watch', ['build'], function() {
-    livereload({ start: true });
-
-
-    gulp.watch(backend.src.raw, ['raw']);
-    gulp.watch(backend.src.scss, ['css']);
-    gulp.watch(backend.src.js, ['js']);
-    gulp.watch(backend.src.images, ['images']);
-    gulp.watch(backend.src.fonts, ['fonts']);
+gulp.task('wysiwyg', function() {
+    return gulp.src(paths.wysiwyg)
+        .pipe(gulp.dest(dst.wysiwyg));
 });
 
-
-gulp.task('clear', function() {
-    return gulp.src(['dist/*']).pipe(rimraf());
+gulp.task('js', ['coffee'], function() {
+    return gulp.src(paths.js)
+        .pipe(gulpif(argv.release, uglify(uglifyOpts)))
+        .pipe(concat(version + '.all.js'))
+        .pipe(gulp.dest(dst.js))
+        .pipe(gulpif(process.argv.indexOf('watch') != -1, livereload()));
 });
 
-gulp.task('build', ['clear'], function(){
-    gulp.start(
-        'raw', 'css', 'js', 'images', 'fonts'
-    );
+gulp.task('images', function() {
+    return gulp.src(paths.images)
+        .pipe(imagemin(imagesOpts))
+        .pipe(gulp.dest(dst.images));
 });
 
-gulp.task('default', function(){
-    gulp.start('watch');
+gulp.task('sass', function() {
+    return gulp.src(paths.sass)
+        .pipe(sass(sassOpts))
+        .pipe(gulp.dest(dst.sass));
+});
+
+gulp.task('css', ['sass', 'fonts'], function() {
+    return gulp.src(paths.css)
+        .pipe(gulp.dest(dst.sass))
+        .pipe(autoprefixer({
+            browsers: ['last 2 versions'],
+            cascade: false
+        }))
+        .pipe(gulpif(argv.release, minifyCSS(minifyOpts)))
+        .pipe(concat(version + '.all.css'))
+        .pipe(gulp.dest(dst.css))
+        .pipe(gulpif(process.argv.indexOf('watch') != -1, livereload()));
+});
+
+gulp.task('watch', ['default'], function() {
+    livereload.listen();
+    gulp.watch(paths.wysiwyg, ['wysiwyg']);
+    gulp.watch(paths.js, ['js']);
+    gulp.watch(paths.images, ['images']);
+    gulp.watch(paths.sass, ['css']);
+});
+
+gulp.task('clean', function() {
+    return gulp.src(['dist/*'], {
+        read: false
+    }).pipe(clean());
+});
+
+gulp.task('build', ['clean'], function() {
+    return gulp.start('js', 'css', 'images', 'fonts', 'wysiwyg');
+});
+
+gulp.task('default', function() {
+    return gulp.start('build');
 });

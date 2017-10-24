@@ -1,0 +1,45 @@
+.tooltip {
+  @include border-radius;
+  @include antialias;
+  // @include gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.8));
+  @include box-shadow(0 3px 5px rgba(0, 0, 0, 0.3));
+  display: block;
+  z-index: 10002;
+  text-align: center;
+  text-shadow: 0 1px rgba(0, 0, 0, 0.5);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  border-top: 1px solid rgba(255, 255, 255, 0.5);
+  position: absolute;
+  padding: 5px 10px;
+  &:after {
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 10px solid #333333;
+    border-top-color: rgba(0, 0, 0, 0.7);
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: -10px;
+    margin-left: -10px;
+  }
+  &.top:after {
+    border-top-color: transparent;
+    border-bottom: 10px solid #333333;
+    border-bottom-color: rgba(0, 0, 0, 0.6);
+    top: -20px;
+    bottom: auto;
+  }
+  &.left:after {
+    left: 10px;
+    margin: 0;
+  }
+  &.right:after {
+    right: 10px;
+    left: auto;
+    margin: 0;
+  }
+}

@@ -1,0 +1,39 @@
+.msticky-transparent {
+  position: static !important;
+}
+
+.msticky-parent {
+  position: relative;
+}
+
+.msticky-dimension-top {
+  &.msticky-sticky {
+    position: fixed;
+    top: 0;
+  }
+
+  &.msticky-bottom {
+    position: absolute;
+    bottom: 0;
+  }
+
+  &.msticky-top {
+    position: static;
+  }
+}
+
+.msticky-dimension-bottom {
+  &.msticky-sticky {
+    position: fixed;
+    bottom: 0;
+  }
+
+  &.msticky-top {
+    position: absolute;
+    top: 0;
+  }
+
+  &.msticky-bottom {
+    position: static;
+  }
+}

@@ -1,0 +1,186 @@
+@import "normalize";
+
+@import "settings";
+@import "base";
+@import "foundation_settings";
+
+@import "mindy";
+
+@import "vendor/ui";
+@import "vendor/perfectscroll";
+@import "vendor/codemirror";
+@import "vendor/codemirror_theme";
+@import "vendor/ace";
+@import "vendor/pickmeup";
+
+@import "parts/mixins";
+
+h1, h2, h3, h4, h5, h6 {
+  @include antialias;
+}
+
+h1, h2, h3 {
+  @include antialias;
+}
+
+h1 {
+  font-size: 20px;
+}
+
+h5 {
+  font-size: 18px;
+}
+
+.button {
+  @include antialias;
+}
+
+fieldset {
+  legend {
+    @include antialias;
+  }
+}
+
+#wrapper {
+  @include box-sizing(border-box);
+  height: 100%;
+  width: 100%;
+  min-width: 978px;
+
+  #main {
+    @include clearfix;
+
+    #content {
+      border-width: 0 1px;
+      border-style: solid;
+      border-color: $borderColor;
+      background-color: #fff;
+      height: 100%;
+
+      .content-wrap {
+        padding: $defaultPadding / 2 $defaultPadding $defaultPadding;
+      }
+
+      &.list {
+        padding: 0;
+
+        .content-wrap {
+          padding: $defaultPadding / 3;
+        }
+      }
+
+      &.update, &.create {
+        padding: 0;
+
+        .content-wrap {
+          padding-bottom: $defaultPadding * 2;
+
+          fieldset {
+            border: {
+              width: 1px 0 0;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  #footer {
+    padding: 20px 10px;
+    font-size: 13px;
+    color: $concrete;
+  }
+}
+
+#base {
+  display: table;
+  min-height: 100%;
+  height: 100%;
+
+  #base-line {
+    display: table-row;
+
+    #main {
+      width: $mainWidth;
+      display: table-cell;
+      vertical-align: top;
+      height: 100%;
+    }
+
+    #last-column {
+      vertical-align: top;
+      display: none;
+      width: $lastColumnWidth;
+
+      .last-columns-content {
+        padding: $defaultPadding;
+
+        h5 {
+          @include antialias;
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (min-width: $mainWidth+$lastColumnWidth+$sidebarWidth+10px) {
+  #base {
+    #base-line {
+      #last-column {
+        display: table-cell;
+      }
+    }
+  }
+}
+
+#footer {
+  display: none;
+}
+
+.admin-header-link {
+  border: 1px solid #e0e0e0;
+  @include border-radius(15px);
+  @include background-clip(padding-box);
+  font-size: 0.9rem;
+  padding: 5px 15px;
+  color: #777;
+  margin-left: 15px;
+
+  i {
+    margin-right: 5px;
+    font-size: 0.7rem;
+  }
+}
+input[type=file]{
+  width: auto;
+  cursor: pointer;
+}
+
+
+#hide-sidebar {
+  display: block;
+}
+
+@import "modules/translate";
+@import "modules/files";
+
+@import "parts/base";
+@import "parts/info";
+@import "parts/sticky";
+@import "parts/buttons";
+@import "parts/form";
+@import "parts/pager";
+@import "parts/toolbar";
+@import "parts/fixes";
+@import "parts/debugpanel";
+@import "parts/news";
+@import "parts/scroll";
+@import "parts/fancybox";
+@import "parts/user_actions";
+@import "parts/flash";
+@import "parts/tooltip";
+@import "parts/select2";
+@import "parts/breadcrumbs";
+@import "parts/tinymce_fix";
+@import "parts/admin_login";
+@import "parts/mmodal";

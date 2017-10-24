@@ -1,20 +1,29 @@
 <?php
+/**
+ * 
+ *
+ * All rights reserved.
+ * 
+ * @author Falaleev Maxim
+ * @email max@studio107.ru
+ * @version 1.0
+ * @company Studio107
+ * @site http://studio107.ru
+ * @date 15/09/14.09.2014 14:21
+ */
 
 namespace Modules\Meta\Models;
 
-
-use Xcart\App\Main\Xcart;
-use Xcart\App\Orm\Manager;
+use Mindy\Orm\Manager;
+use Modules\Sites\Traits\SiteTrait;
 
 class MetaManager extends Manager
 {
-//    use SiteTrait;
+    use SiteTrait;
 
     public function currentSite()
     {
-        /** @var \Modules\Sites\SitesModule $module */
-
-
+        $this->filter(['site' => $this->getCurrentSite()]);
         return $this;
     }
 }

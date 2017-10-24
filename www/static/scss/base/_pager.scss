@@ -1,0 +1,38 @@
+.pager {
+  @include reset-list;
+  @include clearfix;
+
+  text-align: left;
+
+  li {
+    @include inline-block;
+    margin: 0 2px;
+    font-size: 16px;
+
+    &.selected a {
+      @include border-radius(3px);
+      color: #fff;
+      background-color: $secondary-color;
+    }
+
+    .link {
+      padding: 8px 8px;
+      @include border-radius(3px);
+      border: 1px solid $t;
+
+      .inner {
+        color: $secondary-color;
+      }
+    }
+
+    &:hover, &.selected {
+      .link {
+        border: 1px solid #D2D9E1;
+
+        .inner {
+          color: #000;
+        }
+      }
+    }
+  }
+}

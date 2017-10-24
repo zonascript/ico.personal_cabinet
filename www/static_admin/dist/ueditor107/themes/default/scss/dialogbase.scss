@@ -1,0 +1,59 @@
+@import "normalize";
+
+body {
+  font-size: .9rem;
+}
+
+button, a, [type="button"], [type="submit"] {
+  outline: none;
+}
+
+.tabhead {
+  position: relative;
+  z-index: 10;
+}
+
+.tabhead span {
+  display: inline-block;
+  padding: 0 5px;
+  height: 30px;
+  border: {
+    width: 1px;
+    style: solid;
+    color: #ccc #ccc transparent #ccc;
+  };
+  text-align: center;
+  line-height: 30px;
+  cursor: pointer;
+  *margin-right: 5px;
+}
+
+.tabhead span.focus {
+  height: 31px;
+  border-bottom: none;
+  background: #fff;
+}
+
+.tabbody {
+  position: relative;
+  top: -1px;
+  margin: 0 auto;
+  border: 1px solid #ccc;
+}
+
+/*button*/
+a.button {
+  display: block;
+  text-align: center;
+  line-height: 24px;
+  text-decoration: none;
+  height: 24px;
+  width: 95px;
+  border: 0;
+  color: #838383;
+  background: url(../images/icons-all.gif) no-repeat;
+}
+
+a.button:hover {
+  background-position: 0 -30px;
+}

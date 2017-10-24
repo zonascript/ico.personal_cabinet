@@ -1,0 +1,20 @@
+{% extends request.isAjax ? 'ajax.html' : 'admin/base_login.html' %}
+
+{% block breadcrumbs %}
+    {% set breadcrumbs = [['name' => t('Login', 'user')]] %}
+    {{ parent() }}
+{% endblock %}
+
+{% block content %}
+    <section class="row">
+        <section class="columns large-12">
+            <h3 class="text-center" id="logo">{{ t('Login', 'user') }}</h3>
+
+            <form action="" method="post">
+                {% csrf_token %}
+                {{ form|safe }}
+                <button type="submit" class="ui button fluid tiny primary">{{ t('Login', 'user') }}</button>
+            </form>
+        </section>
+    </section>
+{% endblock %}

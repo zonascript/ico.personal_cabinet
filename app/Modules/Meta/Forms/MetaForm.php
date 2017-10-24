@@ -2,22 +2,22 @@
 
 namespace Modules\Meta\Forms;
 
+use Mindy\Base\Mindy;
+use Mindy\Form\Fields\CharField;
+use Mindy\Form\Fields\CheckboxField;
+use Mindy\Form\Fields\TextAreaField;
+use Mindy\Form\ModelForm;
 use Modules\Meta\MetaModule;
 use Modules\Meta\Models\Meta;
-use Xcart\App\Form\Fields\CharField;
-use Xcart\App\Form\Fields\CheckboxField;
-use Xcart\App\Form\Fields\TextAreaField;
-use Xcart\App\Form\ModelForm;
-use Xcart\App\Main\Xcart;
 
 class MetaForm extends ModelForm
 {
-//    public $exclude = ['is_custom'];
+    public $exclude = ['is_custom'];
 
     public function init()
     {
         parent::init();
-        $onSite = Xcart::app()->getModule('Meta')->onSite;
+        $onSite = Mindy::app()->getModule('Meta')->onSite;
         if (is_null($onSite) || $onSite === false) {
             $this->exclude[] = 'site';
         }
@@ -48,20 +48,5 @@ class MetaForm extends ModelForm
     public function getModel()
     {
         return new Meta;
-    }
-
-    /**
-     * @return array
-     */
-    public function getCleanedData()
-    {
-        return $this->cleanedData;
-    }
-
-    public function beforeSetAttributes($owner, array $attributes)
-    {
-        $attributes['is_custom'] = 1;
-
-        return parent::beforeSetAttributes($owner, $attributes);
     }
 }

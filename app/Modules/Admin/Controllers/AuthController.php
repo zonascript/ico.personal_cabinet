@@ -4,44 +4,117 @@
  *
  * All rights reserved.
  *
- * @author Okulov Anton
- * @email qantus@mail.ru
+ * @author Falaleev Maxim
+ * @email max@studio107.ru
  * @version 1.0
- * @company HashStudio
- * @site http://hashstudio.ru
- * @date 19/05/16 07:48
+ * @company Studio107
+ * @site http://studio107.ru
+ * @date 03/07/14.07.2014 18:50
  */
 
 namespace Modules\Admin\Controllers;
 
-use Modules\Admin\Forms\LoginForm;
-use Xcart\App\Controller\Controller;
-use Xcart\App\Main\Xcart;
+use Mindy\Base\ApplicationList;
+use Mindy\Base\Mindy;
+use Mindy\Helper\Text;
+use Modules\Core\Controllers\FrontendController;
+use Modules\User\Admin\UserAdmin;
+use Modules\User\Forms\ChangePasswordForm;
+use Modules\User\Forms\LoginForm;
+use Modules\User\Models\User;
+use Modules\User\UserModule;
 
-class AuthController extends Controller
+class AuthController extends FrontendController
 {
-    public function login()
+    use ApplicationList;
+
+    public $defaultAction = 'login';
+
+    public $defaultRedirectUrl = '/';
+
+    public function allowedActions()
     {
-        /** @var \Modules\User\Models\UserModel $user */
-        $user = Xcart::app()->getUser();
-        if (!$user->getIsGuest()) {
-            $this->redirect('admin:index');
+        return ['login', 'logout'];
+    }
+
+    public function init()
+    {
+        parent::init();
+
+        $this->defaultRedirectUrl = Mindy::app()->urlManager->reverse('admin:index');
+
+        if (isset($_GET['redirectUrl'])) {
+            Mindy::app()->auth->setReturnUrl($_GET['redirectUrl']);
         }
+    }
+
+    public function actionLogin()
+    {
+        $r = $this->getRequest();
         $form = new LoginForm();
-        if ($this->getRequest()->getIsPost() && $form->populate($_POST)) {
-            if ($form->isValid()) {
-                $form->login();
-                $this->redirect('admin:index');
-            }
+        if ($r->getIsPost() && $form->populate($_POST)->isValid() && $form->login()) {
+            $r->redirect('admin:index');
         }
-        echo $this->render('admin/auth/login.tpl', [
+
+        echo $this->render('admin/login.html', [
             'form' => $form
         ]);
     }
 
-    public function logout()
+    /**
+     * Logout the current user and redirect to returnLogoutUrl.
+     */
+    public function actionLogout()
     {
-        Xcart::app()->auth->logout();
-        $this->redirect('admin:login');
+        $auth = Mindy::app()->auth;
+        if ($auth->isGuest) {
+            $this->getRequest()->redirect(Mindy::app()->homeUrl);
+        }
+
+        $auth->logout();
+        $this->getRequest()->redirect('admin:login');
+    }
+
+    public function actionChangepassword($id)
+    {
+        $auth = Mindy::app()->auth;
+        if ($auth->isGuest) {
+            $this->getRequest()->redirect(Mindy::app()->homeUrl);
+        }
+
+        $model = User::objects()->filter(['pk' => $id])->get();
+        if ($model === null) {
+            $this->error(404);
+        }
+
+        $admin = new UserAdmin;
+        $this->addBreadcrumb(Text::mbUcfirst($admin->getVerboseName()), Mindy::app()->urlManager->reverse('admin:list', [
+            'module' => User::getModuleName(),
+            'adminClass' => $admin->classNameShort()
+        ]));
+        $this->addBreadcrumb((string)$model, Mindy::app()->urlManager->reverse('admin:update', [
+            'module' => User::getModuleName(),
+            'adminClass' => $admin->classNameShort(),
+            'id' => $id
+        ]));
+        $this->addBreadcrumb(UserModule::t('Change password'));
+
+        $form = new ChangePasswordForm(['model' => $model]);
+        $r = $this->getRequest();
+        if ($r->isPost && $form->populate($_POST)->isValid() && $form->save()) {
+            $r->flash->success(UserModule::t('Password changed'));
+            $r->http->refresh();
+        }
+
+        echo $this->render('admin/changepassword.html', [
+            'model' => $model,
+            'form' => $form
+        ]);
+    }
+
+    public function render($view, array $data = [])
+    {
+        $data['apps'] = $this->getApplications();
+        return parent::render($view, $data);
     }
 }

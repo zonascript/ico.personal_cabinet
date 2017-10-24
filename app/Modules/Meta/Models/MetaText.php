@@ -1,12 +1,22 @@
 <?php
+/**
+ *
+ *
+ * All rights reserved.
+ *
+ * @author Okulov Anton
+ * @email qantus@mail.ru
+ * @version 1.0
+ * @company Studio107
+ * @site http://studio107.ru
+ * @date 19/12/15 10:56
+ */
 namespace Modules\Meta\Models;
 
-
-use Modules\Meta\MetaModule;
-use Xcart\App\Orm\Fields\CharField;
-use Xcart\App\Orm\Fields\TextField;
-use Xcart\App\Orm\Model;
-use Xcart\App\Traits\RenderTrait;
+use Mindy\Orm\Fields\CharField;
+use Mindy\Orm\Fields\TextField;
+use Mindy\Orm\Model;
+use Mindy\Utils\RenderTrait;
 
 class MetaText extends Model
 {
@@ -19,15 +29,15 @@ class MetaText extends Model
         return [
             'title' => [
                 'class' => CharField::className(),
-                'verboseName' => MetaModule::t("Title")
+                'verboseName' => self::t("Title")
             ],
             'code' => [
                 'class' => CharField::className(),
-                'verboseName' => MetaModule::t("Code")
+                'verboseName' => self::t("Code")
             ],
             'text' => [
                 'class' => TextField::className(),
-                'verboseName' => MetaModule::t('Text')
+                'verboseName' => self::t('Text')
             ]
         ];
     }

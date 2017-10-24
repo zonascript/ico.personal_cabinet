@@ -11,8 +11,10 @@ Thumbs.db
 /.idea/**
 node_modules/
 bower_components/
-/app/vendors/components/
+vendor/
 composer.lock
 www/static/temp/
 www/media/
 www/static_admin/temp/
+/www/Nginx-1.10_vhost.conf
+/app/runtime/

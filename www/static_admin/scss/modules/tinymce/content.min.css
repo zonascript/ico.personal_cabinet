@@ -1,0 +1,198 @@
+@font-face {
+    font-family: 'Lato';
+    src: local('Lato Thin Regular'), local('Lato-Thin'), url('http://64424.selcdn.ru/webfont/lato/lato-thin.woff') format('woff');
+    font-weight: 100;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Lato';
+    src: local('Lato Light Regular'), local('Lato-Light'), url('http://64424.selcdn.ru/webfont/lato/lato-light.woff') format('woff');
+    font-weight: 300;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Lato';
+    src: local('Lato Regular'), local('Lato-Regular'), url('http://64424.selcdn.ru/webfont/lato/lato-regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Lato';
+    src: local('Lato Medium Regular'), local('Lato-Medium'), url('http://64424.selcdn.ru/webfont/lato/lato-medium.woff') format('woff');
+    font-weight: 500;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Lato';
+    src: local('Lato Semibold Regular'), local('Lato-Semibold'), url('http://64424.selcdn.ru/webfont/lato/lato-semibold.woff') format('woff');
+    font-weight: 600;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Lato';
+    src: local('Lato Bold'), local('Lato-Bold'), url('http://64424.selcdn.ru/webfont/lato/lato-bold.woff') format('woff');
+    font-weight: bold;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Lato';
+    src: local('Lato Heavy Regular'), local('Lato-Heavy'), url('http://64424.selcdn.ru/webfont/lato/lato-heavy.woff') format('woff');
+    font-weight: 800;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Lato';
+    src: local('Lato Black Regular'), local('Lato-Black'), url('http://64424.selcdn.ru/webfont/lato/lato-black.woff') format('woff');
+    font-weight: 900;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Lato';
+    src: local('Lato Thin Italic'), local('Lato-ThinItalic'), url('http://64424.selcdn.ru/webfont/lato/lato-thinitalic.woff') format('woff');
+    font-weight: 100;
+    font-style: italic;
+}
+@font-face {
+    font-family: 'Lato';
+    src: local('Lato Light Italic'), local('Lato-LightItalic'), url('http://64424.selcdn.ru/webfont/lato/lato-lightitalic.woff') format('woff');
+    font-weight: 300;
+    font-style: italic;
+}
+@font-face {
+    font-family: 'Lato';
+    src: local('Lato Italic'), local('Lato-Italic'), url('http://64424.selcdn.ru/webfont/lato/lato-italic.woff') format('woff');
+    font-weight: normal;
+    font-style: italic;
+}
+@font-face {
+    font-family: 'Lato';
+    src: local('Lato Medium Italic'), local('Lato-MediumItalic'), url('http://64424.selcdn.ru/webfont/lato/lato-mediumitalic.woff') format('woff');
+    font-weight: 500;
+    font-style: italic;
+}
+@font-face {
+    font-family: 'Lato';
+    src: local('Lato Semibold Italic'), local('Lato-SemiboldItalic'), url('http://64424.selcdn.ru/webfont/lato/lato-semibolditalic.woff') format('woff');
+    font-weight: 600;
+    font-style: italic;
+}
+@font-face {
+    font-family: 'Lato';
+    src: local('Lato Bold Italic'), local('Lato-BoldItalic'), url('http://64424.selcdn.ru/webfont/lato/lato-bolditalic.woff') format('woff');
+    font-weight: bold;
+    font-style: italic;
+}
+@font-face {
+    font-family: 'Lato';
+    src: local('Lato Heavy Italic'), local('Lato-HeavyItalic'), url('http://64424.selcdn.ru/webfont/lato/lato-heavyitalic.woff') format('woff');
+    font-weight: 800;
+    font-style: italic;
+}
+@font-face {
+    font-family: 'Lato';
+    src: local('Lato Black Italic'), local('Lato-BlackItalic'), url('http://64424.selcdn.ru/webfont/lato/lato-blackitalic.woff') format('woff');
+    font-weight: 900;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Lato Hairline';
+    src: local('Lato Hairline Regular'), local('Lato-Hairline'), url('http://64424.selcdn.ru/webfont/lato/lato-hairline.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Lato Hairline';
+    src: local('Lato Hairline Italic'), local('Lato-HairlineItalic'), url('http://64424.selcdn.ru/webfont/lato/lato-hairlineitalic.woff') format('woff');
+    font-weight: normal;
+    font-style: italic;
+}
+
+body {
+    background-color: #FFFFFF;
+    color: #000000;
+    font-family: "Lato", "Helvetica Neue", Verdana, Arial, Helvetica, sans-serif;
+    font-size: 14px;
+}
+
+td, th {
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-size: 11px
+}
+
+.mce-object {
+    border: 1px dotted #3A3A3A;
+    background: #d5d5d5 url(img/object.gif) no-repeat center
+}
+
+.mce-pagebreak {
+    cursor: default;
+    display: block;
+    border: 0;
+    width: 100%;
+    height: 5px;
+    border: 1px dashed #666;
+    margin-top: 15px;
+    page-break-before: always
+}
+
+@media print {
+    .mce-pagebreak {
+        border: 0px
+    }
+}
+
+.mce-item-anchor {
+    cursor: default;
+    display: inline-block;
+    -webkit-user-select: all;
+    -webkit-user-modify: read-only;
+    -moz-user-select: all;
+    -moz-user-modify: read-only;
+    user-select: all;
+    user-modify: read-only;
+    width: 9px !important;
+    height: 9px !important;
+    border: 1px dotted #3A3A3A;
+    background: #d5d5d5 url(img/anchor.gif) no-repeat center
+}
+
+.mce-nbsp {
+    background: #AAA
+}
+
+hr {
+    cursor: default
+}
+
+.mce-match-marker {
+    background: #AAA;
+    color: #fff
+}
+
+.mce-match-marker-selected {
+    background: #3399ff;
+    color: #fff
+}
+
+.mce-spellchecker-word {
+    border-bottom: 2px solid #F00;
+    cursor: default
+}
+
+.mce-spellchecker-grammar {
+    border-bottom: 2px solid #008000;
+    cursor: default
+}
+
+.mce-item-table, .mce-item-table td, .mce-item-table th, .mce-item-table caption {
+    border: 1px dashed #BBB
+}
+
+td.mce-item-selected, th.mce-item-selected {
+    background-color: #3399ff !important
+}
+
+.mce-edit-focus {
+    outline: 1px dotted #333
+}

@@ -1,0 +1,25 @@
+<section id='debug-panel'>
+    <p>MP: {{ memory_peak }}</p>
+    <p>S: {{ sessions }}</p>
+    <p><a href="{% url 'user:logout' %}?_next={% url 'user:login' %}">Logout</a></p>
+</section>
+
+<style>
+    #debug-panel p {
+        font-family: Consolas, 'Courier New', Monospace;
+        font-size: 13px;
+        margin: 0;
+        padding: 0;
+    }
+    #debug-panel {
+        background-color: rgba(0, 0, 0, 0.8);
+        color: #fff;
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: 120px;
+        z-index: 10003;
+        padding: 5px 10px;
+        height: 66px;
+    }
+</style>

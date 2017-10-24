@@ -1,0 +1,36 @@
+{% if form.errors %}
+    <ul class="form-errors">
+        {% for name, errors in form.errors %}
+            {% for i, error in errors %}
+                {% if error|is_array %}
+                    {% for inline_name, inline_errors in error %}
+                        <ul class="form-errors-inline">
+                            <span class="inline-name">{{ inline_name }} {{ i+1 }}</span>
+                            {% for inline_error in inline_errors %}
+                                <li>{{ inline_error }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endfor %}
+                {% else %}
+                    <li>{{ form.getField(name).label }}: {{ error }}</li>
+                {% endif %}
+            {% endfor %}
+        {% endfor %}
+    </ul>
+{% endif %}
+
+{% if form.fieldsets %}
+    {% for fieldset, fields in form.fieldsets %}
+        {% if fields|length == 0 %}
+            {% continue %}
+        {% endif %}
+        <fieldset>
+            <legend>{{ fieldset }}</legend>
+            {{ form.render("core/form/block-fields.html", fields)|raw }}
+        </fieldset>
+    {% endfor %}
+{% else %}
+    {% for field in form %}
+        <section class="form-block">{{ field|raw }}</section>
+    {% endfor %}
+{% endif %}

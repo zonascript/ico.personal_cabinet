@@ -1,0 +1,23 @@
+{{ form|raw }}
+
+{% for name, inline_list in inlines %}
+    <section class="inline-form">
+        <h3 class="inline-title">{{ name }}</h3>
+        {% for inline in inline_list %}
+            <section id="{{ inline.id }}-container" class="inline-form-item">
+                <table id="{{ inline.id }}" class="form-inline-table">
+                    <tr>
+                        {% for field in inline %}
+                            <td{% if field.hidden %} class="hide"{% endif %}{% if field.delete %} class="actions" align="right"{% endif %}>
+                                {{ field|raw }}
+                            </td>
+                        {% endfor %}
+                    </tr>
+                </table>
+            </section>
+            {% if loop.last and inline.showAddButton %}
+                <input type="button" class="button inline-add" value="Add" data-id="{{ inline.id }}-container" />
+            {% endif %}
+        {% endfor %}
+    </section>
+{% endfor %}

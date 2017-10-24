@@ -1,0 +1,29 @@
+{% if filterForm %}
+    <form id="filter-form" action="{{ request.getPath() }}">
+        <div class="form-lines">
+            {% for input in filterForm %}
+                <div class="form-line clearfix">
+                    <div class="label-block">
+                        {{ input.renderLabel()|raw }}
+                    </div>
+                    <div class="value-block">
+                        {{ input.renderInput()|raw }}
+                        {{ input.renderErrors()|raw }}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="button-line">
+            <input type="submit" class="button ui primary" value="{{ t('Search', 'admin') }}"/>
+        </div>
+    </form>
+{% endif %}
+
+<form action="" method="post" id="main-form">
+    {% csrf_token %}
+    {% include 'admin/admin/_toolbar.html' %}
+
+    <section id="list" data-path="{{ request.getPath() }}">
+        {{ table.render()|safe }}
+    </section>
+</form>

@@ -13,11 +13,10 @@
  */
 namespace Modules\Meta\Models;
 
-use Modules\Meta\MetaModule;
-use Xcart\App\Orm\Fields\TextField;
-use Xcart\App\Orm\Fields\CharField;
-use Xcart\App\Orm\Model;
-use Xcart\App\Traits\RenderTrait;
+use Mindy\Orm\Fields\CharField;
+use Mindy\Orm\Fields\TextField;
+use Mindy\Orm\Model;
+use Mindy\Utils\RenderTrait;
 
 class MetaTemplate extends Model
 {
@@ -30,20 +29,20 @@ class MetaTemplate extends Model
         return [
             'title' => [
                 'class' => CharField::className(),
-                'verboseName' => MetaModule::t("Title")
+                'verboseName' => self::t("Title")
             ],
             'code' => [
                 'class' => CharField::className(),
-                'verboseName' => MetaModule::t("Code")
+                'verboseName' => self::t("Code")
             ],
             'description' => [
                 'class' => TextField::className(),
-                'verboseName' => MetaModule::t('Description'),
+                'verboseName' => self::t('Description'),
                 'null' => true
             ],
             'keywords' => [
                 'class' => TextField::className(),
-                'verboseName' => MetaModule::t('Keywords'),
+                'verboseName' => self::t('Keywords'),
                 'null' => true
             ]
         ];

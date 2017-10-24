@@ -2,31 +2,27 @@
 
 namespace Modules\Meta;
 
-use Modules\Admin\Traits\AdminTrait;
-use Modules\Meta\Helpers\MetaHelper;
-use Xcart\App\Main\Xcart;
-use Xcart\App\Module\Module;
+use Mindy\Base\Mindy;
+use Mindy\Base\Module;
+use Modules\Admin\Traits\AutoAdminTrait;
 
 class MetaModule extends Module
 {
-    use AdminTrait;
+    use AutoAdminTrait;
 
     public $onSite;
 
     public function init()
     {
         if (is_null($this->onSite)) {
-            $this->onSite = (bool)Xcart::app()->getModule('Sites');
+            $this->onSite = Mindy::app()->hasModule('Sites');
         }
     }
 
-    public static function onApplicationRun()
+    public static function preConfigure()
     {
-        $tpl = Xcart::app()->template->getRenderer();
-        $tpl->addFunction('meta', function($params){
-            MetaHelper::getMeta($params['controller']);
-        });
-        $tpl->addFunction('meta_text', ['\Modules\Meta\Helpers\MetaTextHelper', 'getMetaText']);
-
+        $tpl = Mindy::app()->template;
+        $tpl->addHelper('meta', ['\Modules\Meta\Helpers\MetaHelper', 'getMeta']);
+        $tpl->addHelper('meta_text', ['\Modules\Meta\Helpers\MetaTextHelper', 'getMetaText']);
     }
 }

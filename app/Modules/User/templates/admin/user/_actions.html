@@ -1,0 +1,27 @@
+{% if 'update' in admin.actionsList %}
+    <a href="{% url 'admin:update' moduleName adminClass record.pk %}">
+        <i class="icon-edit"></i>
+    </a>
+{% endif %}
+
+<a href="{% url 'admin:changepassword' record.pk %}">
+    <i class="icon-key"></i>
+</a>
+
+{% if 'view' in admin.actionsList and method_exists(record, "getAbsoluteUrl") %}
+    <a href="{{ record.getAbsoluteUrl() }}" target="_blank">
+        <i class="icon-search"></i>
+    </a>
+{% endif %}
+
+{% if 'info' in admin.actionsList %}
+    <a href="{% url 'admin:info' moduleName adminClass record.pk %}">
+        <i class="icon-info"></i>
+    </a>
+{% endif %}
+
+{% if 'delete' in admin.actionsList %}
+    <a class="action-delete" data-confirm="Вы действительно хотите удалить?" href="{% url 'admin:delete' moduleName adminClass record.pk %}">
+        <i class="icon-x"></i>
+    </a>
+{% endif %}

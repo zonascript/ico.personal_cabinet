@@ -1,0 +1,7 @@
+{% extends request.isAjax ? "ajax.html" : "admin/base.html" %}
+
+{% block content %}
+    <h1>{{ t('Languages', 'translate') }}</h1>
+
+    {{ table.render()|safe }}
+{% endblock %}

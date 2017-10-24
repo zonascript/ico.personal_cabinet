@@ -3,18 +3,19 @@
 namespace Modules\Pages\Models;
 
 use Closure;
+use Mindy\Base\Mindy;
+use Mindy\Helper\Alias;
+use Mindy\Orm\Fields\AutoSlugField;
+use Mindy\Orm\Fields\BooleanField;
+use Mindy\Orm\Fields\CharField;
+use Mindy\Orm\Fields\DateTimeField;
+use Mindy\Orm\Fields\ImageField;
+use Mindy\Orm\Fields\TextField;
+use Mindy\Orm\TreeModel;
+use Mindy\Query\ConnectionManager;
 use Modules\Pages\PagesModule;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
-use Xcart\App\Helpers\Paths;
-use Xcart\App\Main\Xcart;
-use Xcart\App\Orm\Fields\BooleanField;
-use Xcart\App\Orm\Fields\CharField;
-use Xcart\App\Orm\Fields\DateTimeField;
-use Xcart\App\Orm\Fields\ImageField;
-use Xcart\App\Orm\Fields\TextField;
-use Xcart\App\Orm\SlugFields\AutoSlugField;
-use Xcart\App\Orm\TreeModel;
 
 /**
  * Class Page
@@ -39,72 +40,72 @@ class Page extends TreeModel
 
     public static function getFields()
     {
-        $sizes = Xcart::app()->getModule('Pages')->sizes;
+        $sizes = Mindy::app()->getModule('Pages')->sizes;
 
         return array_merge(parent::getFields(), [
             'name' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'required' => true,
                 'verboseName' => PagesModule::t('Name')
             ],
             'url' => [
-                'class' => AutoSlugField::className(),
+                'class' => AutoSlugField::class,
                 'source' => 'name',
                 'verboseName' => PagesModule::t('Url'),
                 'unique' => true
             ],
             'content' => [
-                'class' => TextField::className(),
+                'class' => TextField::class,
                 'null' => true,
                 'verboseName' => PagesModule::t('Content')
             ],
             'content_short' => [
-                'class' => TextField::className(),
+                'class' => TextField::class,
                 'null' => true,
                 'verboseName' => PagesModule::t('Short content')
             ],
             'file' => [
-                'class' => ImageField::className(),
+                'class' => ImageField::class,
                 'null' => true,
                 'sizes' => $sizes,
                 'verboseName' => PagesModule::t('File'),
             ],
             'created_at' => [
-                'class' => DateTimeField::className(),
+                'class' => DateTimeField::class,
                 'autoNowAdd' => true,
                 'verboseName' => PagesModule::t("Created at")
             ],
             'updated_at' => [
-                'class' => DateTimeField::className(),
+                'class' => DateTimeField::class,
                 'autoNow' => true,
                 'verboseName' => PagesModule::t("Updated at")
             ],
             'published_at' => [
-                'class' => DateTimeField::className(),
+                'class' => DateTimeField::class,
                 'null' => true,
-                'verboseName' => PagesModule::t("Published at"),
+                'verboseName' => PagesModule::t("Published at")
             ],
             'view' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'null' => true,
                 'verboseName' => PagesModule::t('View')
             ],
             'view_children' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'null' => true,
                 'verboseName' => PagesModule::t('View children')
             ],
             'is_index' => [
-                'class' => BooleanField::className(),
+                'class' => BooleanField::class,
                 'verboseName' => PagesModule::t('Is index')
             ],
             'is_published' => [
-                'class' => BooleanField::className(),
+                'class' => BooleanField::class,
                 'verboseName' => PagesModule::t('Is published'),
                 'default' => true
             ],
             'sorting' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'null' => true,
                 'choices' => [
                     'published_at' => PagesModule::t('Published time ASC'),
@@ -119,10 +120,8 @@ class Page extends TreeModel
 
     public static function objectsManager($instance = null)
     {
-        /** @var  TreeModel $instance */
         $className = get_called_class();
-        $instance = $instance ? $instance : new $className;
-        return new PageManager($instance, $instance->getConnection());
+        return new PageManager($instance ? $instance : new $className);
     }
 
     public function __toString()
@@ -153,7 +152,7 @@ class Page extends TreeModel
             if ($parent) {
                 $this->view = $parent->view_children;
             } else {
-                $this->view = $this->getIsLeaf() ? 'page.tpl' : 'pageset.tpl';
+                $this->view = $this->getIsLeaf() ? 'page.html' : 'pageset.html';
             }
         }
 
@@ -166,13 +165,13 @@ class Page extends TreeModel
      */
     public static function getViews()
     {
-        $finder = Xcart::app()->getComponent('finder');
+        $finder = Mindy::app()->getComponent('finder');
         $theme = $finder->theme;
         if ($theme instanceof Closure) {
             $theme = $theme->__invoke();
         }
-        $pathApp = Paths::get($theme ? 'base.themes.' . $theme . '.templates.pages' : 'base.templates.pages');
-        $pathModule = Paths::get('base.modules.pages.templates.pages');
+        $pathApp = Alias::get($theme ? 'application.themes.' . $theme . '.templates.pages' : 'application.templates.pages');
+        $pathModule = Alias::get('pages.templates.pages');
 
         $templates_app = self::getTemplates($pathApp);
         $templates_module = self::getTemplates($pathModule);
@@ -232,11 +231,11 @@ class Page extends TreeModel
 
     public function getAbsoluteUrl()
     {
-        return Xcart::app()->router->url('page:view', ['url' => $this->url]);
+        return $this->reverse('page:view', ['url' => $this->url]);
     }
 
     /**
-     * @return \Xcart\App\Orm\QuerySet
+     * @return \Mindy\Orm\QuerySet
      */
     public function getChildrenQuerySet()
     {
@@ -257,12 +256,14 @@ class Page extends TreeModel
             $owner->objects()->update(['is_index' => false]);
         }
 
-        if ($this->is_published) {
-            if (empty($owner->published_at)) {
-                $owner->published_at = new \DateTime();
-            }
-        }
+        $queryBuilder = ConnectionManager::getDb()->getQueryBuilder();
+        /** @var \Mindy\Query\Pgsql\Lookup|\Mindy\Query\Mysql\Lookup $queryBuilder */
 
+        if (empty($owner->published_at)) {
+            $owner->published_at = $queryBuilder->convertToDateTime();
+        } else {
+            $owner->published_at = $queryBuilder->convertToDateTime($owner->published_at);
+        }
     }
 
     /**
@@ -270,6 +271,6 @@ class Page extends TreeModel
      */
     public function afterSave($owner, $isNew)
     {
-//        Xcart::app()->cache->set(self::CACHE_PREFIX . $owner->getAbsoluteUrl(), $owner);
+        Mindy::app()->cache->set(self::CACHE_PREFIX . $owner->getAbsoluteUrl(), $owner);
     }
 }

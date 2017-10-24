@@ -1,0 +1,11 @@
+{% if request.flash.count() > 0 %}
+    <section class="row">
+        <div class="column large-12">
+            <ul class="flash-list">
+                {% for key, value in request.flash.all() %}
+                    <li class="{{ key }}">{{ value }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </section>
+{% endif %}

@@ -1,0 +1,33 @@
+<?php
+
+namespace Modules\{{ module }}\Models;
+
+use Mindy\Orm\Fields\CharField;
+use Mindy\Orm\Model;
+use Modules\{{ module }}\{{ module }}Module;
+
+class {{ name }} extends Model
+{
+    public static function getFields()
+    {
+        return [
+            'name' => [
+                'class' => CharField::className(),
+                'verboseName' => {{ module }}Module::t('Name'),
+            ],
+        ];
+    }
+
+    /*
+    public static function objectsManager($instance = null)
+    {
+        $className = get_called_class();
+        return new {{ name }}Manager($instance ? $instance : new $className);
+    }
+
+    public function getAbsoluteUrl()
+    {
+        return $this->reverse('{{ module|lower }}:{{ name|lower }}', ['pk' => $this->pk]);
+    }
+    */
+}

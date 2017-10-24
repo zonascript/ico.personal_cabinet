@@ -1,231 +1,148 @@
-const fs = require('fs');
-const gulp = require('gulp');
-const concat = require('gulp-concat');
-const cssnano = require('gulp-cssnano');
-const imagemin = require('gulp-imagemin');
-const livereload = require('gulp-livereload');
-const rimraf = require('gulp-rimraf');
-const sass = require('gulp-sass');
-const hashsum = require('gulp-hashsum');
-const uglify = require('gulp-uglify');
-const autoprefixer = require('gulp-autoprefixer');
-const babel = require('gulp-babel');
-const browserify = require('gulp-browserify');
-const spawn = require('child_process').spawn;
-const inlineimage = require('gulp-inline-image');
-const pump = require('pump');
+var gulp = require('gulp');
+var process = require('process');
 
-let watch = false;
+var concat = require('gulp-concat'),
+    uglify = require('gulp-uglify'),
+    imagemin = require('gulp-imagemin'),
+    cssnano = require('gulp-cssnano'),
+    sass = require('gulp-sass'),
+    changed = require('gulp-changed'),
+    rimraf = require('gulp-rimraf'),
+    cache = require('gulp-cached'),
+    livereload = require('gulp-livereload');
 
-let frontend = require('./config/gulp.frontend');
+var version = '1.0.0';
 
-function buildVendorsData(vendors) {
-    let vendorsData = {};
-    for (let vendor in vendors) {
-        if (vendors.hasOwnProperty(vendor)) {
-            let vendorConfig = vendors[vendor];
-            for (let type in vendorConfig) {
-                if (vendorConfig.hasOwnProperty(type)) {
-                    let matches = vendorConfig[type];
-                    if (typeof vendorsData[type] == 'undefined') {
-                        vendorsData[type] = [];
-                    }
-                    if (typeof matches == 'string') {
-                        vendorsData[type].unshift(matches);
-                    } else {
-                        vendorsData[type] = [].concat(vendorsData[type], matches)
-                    }
-                }
-            }
-        }
-    }
-    return vendorsData;
-}
+var minify = false;
 
-let frontendVendorsData = buildVendorsData(frontend.vendors);
-for (let vendorType in frontendVendorsData) {
-    if (frontendVendorsData.hasOwnProperty(vendorType)) {
-        if (!frontend.src.hasOwnProperty(vendorType)) {
-            frontend.src[vendorType] = [];
-        }
-        frontend.src[vendorType] = [].concat(frontendVendorsData[vendorType], frontend.src[vendorType]);
-    }
-}
+var imagesOpts = {
+    optimizationLevel: 5,
+    progressive: true,
+    interlaced: true
+};
 
-gulp.task('frontend:scss', function() {
-    return gulp.src(frontend.src.scss)
-        .pipe(sass({
-            includePaths: frontend.src.scss_include ? frontend.src.scss_include : []
-        }).on('error', sass.logError))
-        .pipe(inlineimage())
-        .pipe(gulp.dest(frontend.dst.scss));
-});
+var sassOpts = {
+    includePaths: [
+        'vendor/foundation/scss',
+        'vendor/mindy-sass/mindy'
+    ]
+};
 
-gulp.task('frontend:css:raw', function() {
-    let pipe = gulp.src(frontend.src.css_raw);
+var dst = {
+    js: 'dist/js',
+    css: 'dist/css',
+    images: 'dist/images',
+    sass: 'css',
+    fonts: 'dist/fonts'
+};
 
-    return pipe.pipe(concat(frontend.config.name + '.css'))
-        .pipe(gulp.dest(frontend.dst.scss));
-});
+var paths = {
+    js: [
+        'vendor/jquery/dist/jquery.min.js',
+        'vendor/foundation/js/vendor/modernizr.js',
+        'vendor/jquery.cookie/jquery.cookie.js',
+        'vendor/fastclick/lib/fastclick.js',
+        'vendor/foundation/js/foundation.min.js',
+        'vendor/jquery-form/jquery.form.js',
+        'vendor/mmodal/js/jquery.mindy.modal.js',
+        'vendor/fancybox/source/jquery.fancybox.pack.js',
+        'vendor/fancybox/source/helpers/jquery.fancybox-thumbs.js',
+        'vendor/fancybox/source/helpers/jquery.fancybox-buttons.js',
+        'vendor/fancybox/source/helpers/jquery.fancybox-media.js',
+        'vendor/jquery.inputmask/dist/jquery.inputmask.bundle.min.js',
+        'vendor/slick-carousel/slick/slick.js',
+        'vendor/sticky-kit/jquery.sticky-kit.js',
+        'vendor/jquery.inputmask/dist/inputmask/jquery.inputmask.js',
+        'vendor/pace/pace.js',
+        'vendor/underscore/underscore.js',
+        'vendor/fotorama/fotorama.js',
 
+        'js/ajax_validation.js',
+        'js/comments.js',
+        'js/csrf.js',
+        'js/endless.js',
+        'js/endless_on_scroll.js',
+        'js/js_validation.js',
+        'js/links.js',
+        'js/app.js'
+    ],
+    coffee: 'js/**/*.coffee',
+    images: [
+        'images/**/*'
+    ],
+    fonts: [
+        'fonts/Glyphico/fonts/*',
+        'fonts/glyphico-social/fonts/*',
+        'fonts/lato/fonts/*'
+    ],
+    sass: 'scss/**/*.scss',
+    css: [
+        'vendor/slick-carousel/slick/slick.css',
+        'css/**/*.css',
 
-gulp.task('frontend:css', ['frontend:scss', 'frontend:css:raw'], function () {
-    let pipe = gulp.src(frontend.src.css)
-        .pipe(autoprefixer({
-            browsers: ["> 5%", "last 2 versions", "last 4 iOS versions"],
-            cascade: false
-        }));
+        'fonts/glyphico-social/css/glyphico-social.css',
+        'fonts/Glyphico/css/glyphico.css',
+        'fonts/lato/css/lato.css'
+    ]
+};
 
-    if (frontend.config.compress) {
-        pipe = pipe.pipe(cssnano({
-            preset: ['default'],
-            discardComments: { removeAll: true, },
-            reduceIdents: false
-        }))
-    }
-
-    return pipe.pipe(gulp.dest(frontend.dst.css))
-        .pipe(hashsum({filename: 'frontend/versions/css.yml', hash: 'md5'}))
+gulp.task('fonts', function() {
+    return gulp.src(paths.fonts)
+        .pipe(gulp.dest(dst.fonts))
         .pipe(livereload());
 });
 
-gulp.task('frontend:jsx', function(done){
-
-    let args = ['./node_modules/webpack/bin/webpack.js', '--config', './config/webpack.frontend.js'];
-    if (watch) {
-        args.push('--progress');
-        args.push('-w');
+gulp.task('js', function() {
+    var js = gulp.src(paths.js);
+    if (minify) {
+        js = js.pipe(uglify());
     }
-
-    let cmd = spawn('node', args, {stdio: 'inherit'});
-    cmd.on('close', function (code) {
-        console.log('frontend:jsx exited with code ' + code);
-        done(code);
-    });
-});
-
-let fjsinc_builded = false;
-gulp.task('frontend:js:includes', function(done){
-    if (!fjsinc_builded) {
-        let pipe = gulp.src(frontend.src.js_include);
-
-        if (frontend.config.compress) {
-            pipe = pipe.pipe(uglify(frontend.config.uglify));
-            fjsinc_builded = true;
-        }
-
-        return pipe
-            .pipe(concat('vendors.js'))
-            .pipe(hashsum({filename: 'frontend/versions/vendor_js.yml', hash: 'md5'}))
-            .pipe(gulp.dest(frontend.dst.js));
-    }
-
-    done();
-});
-
-gulp.task('frontend:js', ['frontend:js:includes'], function() {
-    let pipe = gulp.src(frontend.src.js);
-
-    return pipe
-        .pipe(concat(frontend.config.name + '.js'))
-        .pipe(gulp.dest(frontend.dst.js))
-        .pipe(hashsum({filename: 'frontend/versions/js.yml', hash: 'md5'}))
+    return js.pipe(concat(version + '.all.js'))
+        .pipe(gulp.dest(dst.js))
         .pipe(livereload());
 });
 
-
-gulp.task('frontend:images', function() {
-    let pipe = gulp.src(frontend.src.images);
-
-    if (frontend.config.compress) {
-        pipe = pipe.pipe(imagemin(frontend.config.imagemin || {}));
+gulp.task('images', function() {
+    var images = gulp.src(paths.images).pipe(changed(dst.images));
+    if (minify) {
+        images = images.pipe(imagemin(imagesOpts));
     }
-    return pipe
-        .pipe(gulp.dest(frontend.dst.images))
+    return images.pipe(gulp.dest(dst.images))
         .pipe(livereload());
 });
 
-gulp.task('backend:images', function() {
-    let pipe = gulp.src(backend.src.images);
+gulp.task('sass', function() {
+    return gulp.src(paths.sass)
+        .pipe(sass(sassOpts))
+        .pipe(gulp.dest(dst.sass));
+});
 
-    if (backend.config.compress) {
-        pipe = pipe.pipe(imagemin(backend.config.imagemin || {}));
+gulp.task('css', ['sass'], function() {
+    var css = gulp.src(paths.css);
+    if (minify) {
+        css = css.pipe(cssnano());
     }
-    return pipe
-        .pipe(gulp.dest(backend.dst.images))
+    return css.pipe(concat(version + '.all.css'))
+        .pipe(gulp.dest(dst.css))
         .pipe(livereload());
 });
 
-gulp.task('frontend:fonts', function() {
-    return gulp.src(frontend.src.fonts)
-        .pipe(gulp.dest(frontend.dst.fonts)).pipe(livereload());
+// Rerun the task when a file changes
+gulp.task('watch', ['default'], function() {
+    livereload.listen();
+
+    gulp.watch(paths.js, ['js']);
+    gulp.watch(paths.images, ['images']);
+    gulp.watch(paths.sass, ['css']);
 });
 
-
-gulp.task('frontend:raw', function() {
-    return gulp.src(frontend.src.raw)
-        .pipe(gulp.dest(frontend.dst.raw)).pipe(livereload());
+// Clean
+gulp.task('clean', function() {
+    return gulp.src(['dist/*'], {
+        read: false
+    }).pipe(rimraf());
 });
 
-
-gulp.task('watch:frontend', ['build:frontend'], function() {
-    watch = true;
-    livereload({ start: true });
-    // const js_watch = frontend.src.js.concat(frontend.src.jsx);
-
-    gulp.watch(frontend.src.raw, ['frontend:raw']);
-    gulp.watch(frontend.src.scss, ['frontend:css']);
-    gulp.watch(frontend.src.css, ['frontend:css']);
-    gulp.watch(frontend.src.js, ['frontend:js']);
-    gulp.watch(frontend.src.images, ['frontend:images']);
-    gulp.watch(frontend.src.fonts, ['frontend:fonts']);
-
-    gulp.start('frontend:jsx');
-});
-
-gulp.task('prepare:frontend', ['clear:frontend' , 'frontend:jsx'], function(done){
-
-    if (!fs.existsSync(frontend.dst.scss)){
-        fs.mkdirSync(frontend.dst.scss);
-    }
-
-    if (!fs.existsSync(frontend.dst.jsx)){
-        fs.mkdirSync(frontend.dst.jsx);
-    }
-
-    done();
-});
-
-gulp.task('watch', ['build'], function() {
-    gulp.start(
-         'watch:frontend'
-    );
-});
-
-
-gulp.task('clear:frontend', function() {
-    return gulp.src(['frontend/dist/*', 'frontend/temp/*', frontend.dst.jsx, frontend.dst.scss]).pipe(rimraf());
-});
-
-gulp.task('clear', function() {
-    gulp.start(
-        'clear:frontend', 'clear:backend'
-    );
-});
-
-gulp.task('build:frontend', ['clear:frontend', 'prepare:frontend'], function(){
-    gulp.start(
-        'frontend:raw', 'frontend:css', 'frontend:js', 'frontend:images', 'frontend:fonts'
-    );
-});
-
-
-gulp.task('build', function(){
-    gulp.start(
-         'build:frontend'
-    );
-});
-
-gulp.task('default', function(){
-    gulp.start('watch');
+gulp.task('default', ['clean'], function() {
+    return gulp.start('js', 'css', 'images', 'fonts');
 });

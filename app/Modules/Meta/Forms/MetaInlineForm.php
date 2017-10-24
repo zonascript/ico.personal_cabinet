@@ -2,15 +2,14 @@
 
 namespace Modules\Meta\Forms;
 
-use Xcart\App\Form\Fields\CharField;
-use Xcart\App\Form\Fields\HiddenField;
-use Xcart\App\Form\Fields\TextAreaField;
-use Xcart\App\Helpers\Meta as MetaGenerator;
+use Mindy\Base\Mindy;
+use Mindy\Form\Fields\CharField;
+use Mindy\Form\Fields\HiddenField;
+use Mindy\Form\Fields\TextAreaField;
+use Mindy\Form\ModelForm;
+use Mindy\Helper\Meta as MetaGenerator;
 use Modules\Meta\MetaModule;
 use Modules\Meta\Models\Meta;
-use Xcart\App\Form\ModelForm;
-use Xcart\App\Main\Xcart;
-use Xcart\App\Orm\Model;
 
 /**
  * All rights reserved.
@@ -38,7 +37,7 @@ class MetaInlineForm extends ModelForm
         return [
             'title' => [
                 'class' => CharField::className(),
-                'label' => MetaModule::t('Title'),
+                'label' => MetaModule::t('Title')
             ],
             'description' => [
                 'class' => TextAreaField::className(),
@@ -63,30 +62,13 @@ class MetaInlineForm extends ModelForm
      */
     protected function getSitePk()
     {
-        $site = Xcart::app()->getModule('Sites')->getSite();
-        return $site ? $site->code : null;
+        $site = Mindy::app()->getModule('Sites')->getSite();
+        return $site ? $site->pk : null;
     }
 
     public function getModel()
     {
         return new Meta;
-    }
-
-    public function beforeSetAttributes($owner, array $attributes)
-    {
-        $model = $owner->getInstance();
-
-        if ($model && method_exists($model, 'getAbsoluteUrl')) {
-            if (isset($model->metaConfig)) {
-                $metaConfig = $model->metaConfig;
-
-                if (empty($attributes['title'])) {
-                    $attributes['title'] = $model->{$metaConfig['title']};
-                }
-            }
-        }
-
-        return $attributes;
     }
 
     /**
@@ -118,12 +100,12 @@ class MetaInlineForm extends ModelForm
      */
     protected function getIsMultiSite()
     {
-        return Xcart::app()->getModule('Meta')->onSite;
+        return Mindy::app()->getModule('Meta')->onSite;
     }
 
     /**
      * @param array $attributes
-     * @return array|Model[]
+     * @return array|\Mindy\Orm\Model[]
      */
     public function getLinkModels(array $attributes)
     {
@@ -132,7 +114,7 @@ class MetaInlineForm extends ModelForm
         if (!$model->getIsNewRecord() && method_exists($model, 'getAbsoluteUrl')) {
             $models = Meta::objects()->filter([
                 'url' => $model->getAbsoluteUrl(),
-                'site_code' => $this->getIsMultiSite() ? $this->getSitePk() : null
+                'site_id' => $this->getIsMultiSite() ? $this->getSitePk() : null
             ]);
         }
         return $models;

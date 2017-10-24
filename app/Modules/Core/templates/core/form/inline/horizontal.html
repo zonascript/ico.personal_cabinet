@@ -1,0 +1,20 @@
+<table class="form-inline-table">
+    <tr>
+        {% for field in form %}
+            {% if not field.hidden %}
+                {% if not field.delete %}
+                    <td>
+                        {{ field|safe }}
+                    </td>
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+    </tr>
+</table>
+{% for field in form %}
+    {% if field.hidden %}
+        {% if not field.delete %}
+            {{ field|safe }}
+        {% endif %}
+    {% endif %}
+{% endfor %}

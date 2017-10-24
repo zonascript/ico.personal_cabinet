@@ -1,86 +1,53 @@
 <?php
+/**
+ * 
+ *
+ * All rights reserved.
+ * 
+ * @author Falaleev Maxim
+ * @email max@studio107.ru
+ * @version 1.0
+ * @company Studio107
+ * @site http://studio107.ru
+ * @date 12/06/14.06.2014 19:43
+ */
+
 namespace Modules\Sites;
 
-use Mindy\QueryBuilder\Q\QOr;
-use Modules\Admin\Traits\AdminTrait;
-use Modules\Sites\Helpers\CurrentSiteHelper;
-use Modules\Sites\Models\SiteModel;
-use Xcart\App\Cli\Cli;
-use Xcart\App\Main\Xcart;
-use Xcart\App\Module\Module;
+
+use Mindy\Base\Module;
+use Modules\Sites\Models\Site;
 
 class SitesModule extends Module
 {
-    use AdminTrait;
-
-    public $defaultStore = 'AR';
-    public $modelClass = 'Modules\Sites\Models\SiteModel';
+    public $modelClass = 'Modules\Sites\Models\Site';
+    public $formClass = 'Modules\Sites\Forms\SiteForm';
 
     /**
-     * @var \Modules\Sites\Models\SiteModel
+     * @var \Modules\Sites\Models\Site
      */
     private $_site;
-    private $_default_site;
-    private $_setted = false;
 
-    /**
-     * @var \Modules\Sites\Models\SiteConfigModel
-     */
-    private $_config;
-
-    public function setSite(SiteModel $model)
+    public function setSite(Site $model)
     {
-        $this->_setted = true;
         $this->_site = $model;
     }
 
-    /**
-     * @return \Modules\Sites\Models\SiteModel|null
-     * @throws \Exception
-     */
-    public function getSite($default = true)
+    public function getSite()
     {
         return $this->_site;
     }
 
-    public function getSiteConfig()
+    public function getMenu()
     {
-        if (!$this->_config) {
-            $SiteModel = $this->getSite();
-            $this->_config = [];
-
-            foreach ($SiteModel->config->all() as $item) {
-                $this->_config[$item->name] = $item;
-            }
-        }
-
-        return $this->_config;
-    }
-
-    public function initDefaultSite()
-    {
-        /** @var SiteModel $model */
-        if ($model = SiteModel::objects()->get(['code' => $this->defaultStore]))
-        {
-//            $this->setSite($model);
-            $this->_default_site = $model;
-        }
-        else {
-            throw new \Exception("Default site not found for store '{$this->defaultStore}'");
-        }
-    }
-
-
-    public static function onApplicationRun()
-    {
-        $renderer = Xcart::app()->template->getRenderer();
-
-        $renderer->addAccessorCallback('getSiteConfig', function(){
-            return Xcart::app()->getModule('Sites')->getSiteConfig();
-        });
-
-        $renderer->addAccessorCallback('getSite', function(){
-            return Xcart::app()->getModule('Sites')->getSite();
-        });
+        return [
+            'name' => $this->getName(),
+            'items' => [
+                [
+                    'name' => self::t('Sites'),
+                    'adminClass' => 'SiteAdmin',
+                ]
+            ]
+        ];
     }
 }

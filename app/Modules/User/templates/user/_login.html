@@ -1,0 +1,10 @@
+<form action="{% url 'user:login' %}?_next={{ request.path }}" method="post">
+    {% csrf_token %}
+    {{ form|safe }}
+    <p class="right">
+        <a class="link" href="{% url 'user:registration' %}">{{ t('Registration', 'user') }}</a>
+        <a class="link" href="{% url 'user:recover' %}">{{ t('Lost password?', 'user') }}</a>
+    </p>
+    <br/>
+    <input type="submit" class="button" value="{{ t('Login', 'user') }}"/>
+</form>

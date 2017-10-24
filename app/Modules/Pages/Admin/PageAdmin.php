@@ -2,7 +2,7 @@
 
 namespace Modules\Pages\Admin;
 
-use Modules\Admin\Contrib\Admin;
+use Modules\Admin\Components\NestedAdmin;
 use Modules\Pages\Forms\PagesForm;
 use Modules\Pages\Models\Page;
 use Modules\Pages\PagesModule;
@@ -11,74 +11,72 @@ use Modules\Pages\PagesModule;
  * Class PageAdmin
  * @package Modules\Pages
  */
-class PageAdmin extends Admin
+class PageAdmin extends NestedAdmin
 {
     public $linkColumn = 'name';
 
-    public function getListColumns()
+    public function getColumns()
     {
         return ['name'];
     }
 
-    public function getSearchColumns()
+    public function getSearchFields()
     {
-        return ['name'];
+        return ['name', 'id'];
     }
 
-    public function getForm()
+    public function getCreateForm()
     {
-        return new PagesForm();
+        return PagesForm::class;
     }
 
+    /**
+     * @return Page
+     */
     public function getModel()
     {
-        return new Page();
+        return new Page;
     }
 
-    public static function getName()
+    public function getNames($model = null)
     {
-        return PagesModule::t('Pages');
+        return [
+            PagesModule::t('Pages'),
+            PagesModule::t('Create page'),
+            PagesModule::t('Update page')
+        ];
     }
 
-//    public function getNames($model = null)
-//    {
-//        return [
-//            PagesModule::t('Pages'),
-//            PagesModule::t('Create page'),
-//            PagesModule::t('Update page')
-//        ];
-//    }
-//
-//    public function getActions()
-//    {
-//        return array_merge(parent::getActions(), [
-//            'publish' => PagesModule::t('Publish'),
-//            'unpublish' => PagesModule::t('Unpublish'),
-//        ]);
-//    }
-//
-//    public function unpublish(array $data = [])
-//    {
-//        if (isset($data['models'])) {
-//            Page::objects()->filter(['pk' => $data['models']])->update(['is_published' => false]);
-//        }
-//
-//        $this->redirect('admin:list', [
-//            'module' => $this->getModel()->getModuleName(),
-//            'adminClass' => $this->classNameShort()
-//        ]);
-//    }
-//
-//    public function publish(array $data = [])
-//    {
-//        if (isset($data['models'])) {
-//            Page::objects()->filter(['pk' => $data['models']])->update(['is_published' => true]);
-//        }
-//
-//        $this->redirect('admin:list', [
-//            'module' => $this->getModel()->getModuleName(),
-//            'adminClass' => $this->classNameShort()
-//        ]);
-//    }
+    public function getActions()
+    {
+        return array_merge(parent::getActions(), [
+            'publish' => PagesModule::t('Publish'),
+            'unpublish' => PagesModule::t('Unpublish'),
+        ]);
+    }
+
+    public function unpublish(array $data = [])
+    {
+        if (isset($data['models'])) {
+            Page::objects()->filter(['pk' => $data['models']])->update(['is_published' => false]);
+        }
+
+        $this->redirect('admin:list', [
+            'module' => $this->getModel()->getModuleName(),
+            'adminClass' => $this->classNameShort()
+        ]);
+    }
+
+    public function publish(array $data = [])
+    {
+        if (isset($data['models'])) {
+            Page::objects()->filter(['pk' => $data['models']])->update(['is_published' => true]);
+        }
+
+        $this->redirect('admin:list', [
+            'module' => $this->getModel()->getModuleName(),
+            'adminClass' => $this->classNameShort()
+        ]);
+    }
 }
 

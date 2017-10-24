@@ -1,0 +1,36 @@
+<table class="toolbar">
+    <tbody>
+    <tr>
+        <td class="toolbar-actions-td">
+            {% if admin.getCanCreate() %}
+            <a href="{% url 'admin:create' moduleName adminClass %}" class="create ui button icon primary tiny">
+                <i class="icon add square"></i>
+                {{ t('Create', 'admin') }}
+            </a>
+            {% endif %}
+
+            <div class="ui icon action input">
+                <select name="action" id="actions" class="actions">
+                    <option value="" disabled="disabled" selected="selected">{{ t('Choose action', 'admin') }}</option>
+                    {% for key, value in actions %}
+                        <option value="{{ key }}">{{ value }}</option>
+                    {% endfor %}
+                </select>
+                <button class="submit-actions ui button icon tiny primary">
+                    <i class="icon checkmark"></i>
+                </button>
+            </div>
+        </td>
+        {% if searchFields %}
+            <td class="toolbar-search-td">
+                <div class="ui icon action input fluid">
+                    <input type="text" name="search" placeholder="{{ t('Search','admin') }}..." value="{{ request.post.get('search') }}"/>
+                    <button type="submit" class="ui button tiny primary icon">
+                        <i class="search icon"></i>
+                    </button>
+                </div>
+            </td>
+        {% endif %}
+    </tr>
+    </tbody>
+</table>

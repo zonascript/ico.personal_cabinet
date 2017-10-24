@@ -1,0 +1,26 @@
+{% if form.errors %}
+    <ul class="form-errors">
+        {% for name, errors in form.errors %}
+            {% for error in errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        {% endfor %}
+    </ul>
+{% endif %}
+
+{% if form.fieldsets %}
+    {% for fieldset, fields in form.fieldsets %}
+        <fieldset>
+            <legend>{{ fieldset }}</legend>
+            {{ form.render("core/form/table-fields.html", fields)|raw }}
+        </fieldset>
+    {% endfor %}
+{% else %}
+    <table class="form-table">
+        <tr>
+        {% for field in form %}
+            <td>{{ field|raw }}</td>
+        {% endfor %}
+        </tr>
+    </table>
+{% endif %}

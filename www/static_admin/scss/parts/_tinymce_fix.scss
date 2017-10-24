@@ -1,0 +1,21 @@
+.mceEditor {
+  table {
+    table-layout: auto;
+  }
+
+  td.mceIframeContainer {
+    padding: 0 !important;
+  }
+
+  td.mceToolbar {
+    padding: 5px 0 0 0 !important;
+
+    .mceToolbar {
+      width: auto !important;
+
+      td {
+        padding: 0 !important;
+      }
+    }
+  }
+}

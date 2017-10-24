@@ -1,0 +1,23 @@
+<h5>{{ t('Last changes', 'admin') }}</h5>
+
+{% set actions = user_actions(10) %}
+{% if actions %}
+    <ul class="user-action-list">
+        {% for message in actions %}
+            <li{% if loop.last %} class="last"{% endif %}>
+                <span class="icon module-image {{ message.module|lower }}"></span>
+                <p class="datetime">{{ message.created_at|humanizeDateTime }}</p>
+                <p>
+                    {% if message.user %}
+                        <a href="{% url 'user:view' message.user.pk %}">{{ message.user }}</a>:
+                    {% endif %}
+                    {{ message.message|safe }}
+                </p>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <section class="user-actions-empty">
+        {{ t('Lately, nothing interesting happened.', 'admin') }}
+    </section>
+{% endif %}

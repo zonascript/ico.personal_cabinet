@@ -1,0 +1,16 @@
+{% extends "user/base.html" %}
+
+{% block heading %}
+    <h1>{{ t('Recover password', 'user') }}</h1>
+{% endblock %}
+
+{% block content %}
+    <div class="recover-form">
+        <form action="{% url 'user:recover' %}" method="post">
+            {% csrf_token %}
+            {{ form|safe }}
+            <br/>
+            <button class="button" type="submit">{{ t('Recover password', 'user') }}</button>
+        </form>
+    </div>
+{% endblock %}

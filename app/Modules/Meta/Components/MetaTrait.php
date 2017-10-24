@@ -1,9 +1,22 @@
 <?php
+/**
+ *
+ *
+ * All rights reserved.
+ *
+ * @author Falaleev Maxim
+ * @email max@studio107.ru
+ * @version 1.0
+ * @company Studio107
+ * @site http://studio107.ru
+ * @date 12/06/14.06.2014 19:35
+ */
+
 namespace Modules\Meta\Components;
 
 
-use Xcart\App\Main\Xcart;
-use Xcart\App\Orm\Model;
+use Mindy\Base\Mindy;
+use Mindy\Orm\Model;
 
 trait MetaTrait
 {
@@ -23,6 +36,10 @@ trait MetaTrait
      * @var string
      */
     protected $description;
+    /**
+     * @var array
+     */
+    protected $breadcrumbs = [];
 
     /**
      * @var string[]
@@ -32,7 +49,7 @@ trait MetaTrait
     /**
      * @var string|null
      */
-    protected $metaTemplate = 'default';
+    protected $metaTemplate = null;
 
     /**
      * @var array
@@ -47,7 +64,7 @@ trait MetaTrait
         if($canonical instanceof Model) {
             $canonical = $canonical->getAbsoluteUrl();
         }
-        $this->canonical = Xcart::app()->request->getHostInfo() . '/' . ltrim($canonical, '/');
+        $this->canonical = Mindy::app()->request->http->absoluteUrl($canonical);
     }
 
     /**
@@ -111,11 +128,18 @@ trait MetaTrait
      */
     public function addBreadcrumb($name, $url = null, $items = [])
     {
-        $ba = Xcart::app()->breadcrumbs->getActive();
-        Xcart::app()->breadcrumbs->setActive('metaTrait');
-        Xcart::app()->breadcrumbs->add($name, $url);
-        Xcart::app()->breadcrumbs->setActive($ba);
+        if ($name instanceof Model) {
+            if ($url === null && method_exists($name, 'getAbsoluteUrl')) {
+                $url = $name->getAbsoluteUrl();
+            }
+            $name = (string)$name;
+        }
 
+        $this->breadcrumbs[] = [
+            'name' => $name,
+            'url' => $url,
+            'items' => $items
+        ];
         return $this;
     }
 
@@ -124,7 +148,7 @@ trait MetaTrait
      */
     public function getBreadcrumbs()
     {
-        return Xcart::app()->breadcrumbs->get('metaTrait');
+        return $this->breadcrumbs;
     }
 
     /**

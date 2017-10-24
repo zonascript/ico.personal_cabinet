@@ -1,0 +1,27 @@
+<div class="pager-holder">
+    <section class="page-size right">
+        {% include "core/pager/sizes.html" %}
+    </section>
+
+    <ul class="pager left {% if this.getPagesCount() <= 1 %}hide{% endif %}">
+        {% if this.hasPrevPage() %}
+            {% for page in this.iterPrevPage() %}
+                <li>
+                    <a href="{{ this.getUrl(page) }}">{{ page }}</a>
+                </li>
+            {% endfor %}
+        {% endif %}
+
+        <li>
+            <span class="selected">{{ this.currentPage }}</span>
+        </li>
+
+        {% if this.hasNextPage() %}
+            {% for page in this.iterNextPage() %}
+                <li>
+                    <a href="{{ this.getUrl(page) }}">{{ page }}</a>
+                </li>
+            {% endfor %}
+        {% endif %}
+    </ul>
+</div>

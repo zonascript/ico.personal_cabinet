@@ -1,0 +1,21 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+    <link rel="stylesheet" type="text/css" href="/static_help/css/screen.css">
+
+    <h1>Online help</h1>
+    <section id="log-container">
+        <div id="log"></div>
+    </section>
+    <form id="form">
+        <div class="form-inner">
+            <input type="submit" value="Send" id="log-submit" class="button right"/>
+            <input type="text" id="log-message" placeholder="Сообщение" />
+        </div>
+    </form>
+
+    <script type="text/javascript" src="/static_help/js/jquery.cookie.js"></script>
+    <script type="text/javascript" src="/static_help/js/detector.js"></script>
+    <script type="text/javascript" src="/static_help/js/md5.js"></script>
+    <script type="text/javascript" src="/static_help/js/main.js"></script>
+{% endblock %}

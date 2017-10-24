@@ -2,13 +2,13 @@
 
 namespace Modules\Meta\Models;
 
+use Mindy\Base\Mindy;
+use Mindy\Orm\Fields\BooleanField;
+use Mindy\Orm\Fields\CharField;
+use Mindy\Orm\Fields\ForeignField;
+use Mindy\Orm\Model;
 use Modules\Meta\MetaModule;
 use Modules\Sites\SitesModule;
-use Xcart\App\Orm\Fields\CharField;
-use Xcart\App\Main\Xcart;
-use Xcart\App\Orm\Fields\BooleanField;
-use Xcart\App\Orm\Fields\ForeignField;
-use Xcart\App\Orm\Model;
 
 class Meta extends Model
 {
@@ -44,14 +44,12 @@ class Meta extends Model
             ],
         ];
 
-        $onSite = Xcart::app()->getModule('Meta')->onSite;
+        $onSite = Mindy::app()->getModule('Meta')->onSite;
         if ($onSite) {
             $fields['site'] = [
-                'field' => 'site_code',
                 'class' => ForeignField::className(),
-                'modelClass' => Xcart::app()->getModule('Sites')->modelClass,
+                'modelClass' => Mindy::app()->getModule('Sites')->modelClass,
                 'verboseName' => SitesModule::t('Site'),
-                'link' => ['site_code' => 'code'],
                 'required' => true,
                 'null' => true
             ];
@@ -72,11 +70,11 @@ class Meta extends Model
 
     public function beforeSave($owner, $isNew)
     {
-        $onSite = Xcart::app()->getModule('Meta')->onSite;
+        $onSite = Mindy::app()->getModule('Meta')->onSite;
         if ($onSite) {
-            $sitesModule = Xcart::app()->getModule('Sites');
+            $sitesModule = Mindy::app()->getModule('Sites');
             if (($isNew || empty($owner->site)) && $sitesModule) {
-                $owner->site = $sitesModule->getSite()->code;
+                $owner->site = $sitesModule->getSite();
             }
         }
     }
@@ -84,8 +82,6 @@ class Meta extends Model
     public static function objectsManager($instance = null)
     {
         $className = get_called_class();
-        /** @var Model $instance */
-        $instance = ($instance ?: new $className);
-        return new MetaManager($instance, $instance->getConnection());
+        return new MetaManager($instance ? $instance : new $className);
     }
 }

@@ -1,0 +1,42 @@
+<div class="breadcrumb-container">
+    <div class="ui tiny breadcrumb">
+        <div class="section">
+            <a data-content="{{ t('Show / hide sidebar', 'admin') }}"
+               data-variation="tiny inverted" class="ui show-hide-sidebar mini circular button icon" id="hide-sidebar" href="#">
+                <i class="icon sidebar"></i>
+            </a>
+        </div>
+        {% for bc in this.breadcrumbs %}
+            {% if loop.first %}
+                <div class="section">{{ t('Module', 'admin') }}: {{ bc.name|trim }}</div>
+                {% if not loop.last %}
+                    <i class="right chevron icon divider"></i>
+                {% endif %}
+            {% elif loop.last %}
+                <div class="active section">{{ bc.name|trim }}</div>
+            {% else %}
+                {% if bc.url %}
+                    <a class="section{% if bc.items|length > 1 %} breadcrumb-nested{% endif %}" href="{{ bc.url }}">{{ bc.name|trim }}</a>
+                {% else %}
+                    <div class="section{% if bc.items|length > 1 %} breadcrumb-nested{% endif %}">{{ bc.name|trim }}</div>
+                {% endif %}
+
+                {% if bc.items|length > 1 %}
+                    <div class="ui popup">
+                        {% if bc.items|length > 1 %}
+                            <ul class="breadcrumb-nested-list">
+                                {% for item in bc.items %}
+                                    <li>
+                                        <a href="{{ item.url }}">{{ item.name|trim }}</a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+                {% endif %}
+
+                <i class="right chevron icon divider"></i>
+            {% endif %}
+        {% endfor %}
+    </div>
+</div>

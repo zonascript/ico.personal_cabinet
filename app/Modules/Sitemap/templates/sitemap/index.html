@@ -1,0 +1,22 @@
+{% extends 'sitemap/base.html' %}
+
+{% block content %}
+    <ul class="sitemap no-bullet">
+        {% for name, sitemap in sitemaps %}
+            <li>
+                <h2>{{ sitemap.module.name }} - {{ sitemap.sitemapName }}</h2>
+                {% if sitemap.htmlData|length > 0 %}
+                    <ul class="no-bullet">
+                        {% for item in sitemap.htmlData %}
+                            <li style="padding-left: {{ 10 * item.level }}px">
+                                <a href="{{ item.url }}">
+                                    {{ item.name }}
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

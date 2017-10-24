@@ -1,0 +1,202 @@
+{% extends request.isAjax ? "ajax.html" : "admin/base.html" %}
+
+{% block content %}
+    <div class="buttons-block right">
+        <button class="button translate-all success">{{ t('Translate all', 'translate') }}</button>
+        <button class="button show-all success">{{ t('Show all', 'translate') }}</button>
+        <button class="button hide-saved">{{ t('Hide saved', 'translate') }}</button>
+    </div>
+    <h1>{{ t('Translate', 'translate') }} {{ language }}</h1>
+    <p class="clearfix"></p>
+
+    {% for module_name, module_dictionaries in dictionaries %}
+        <div class="module-holder hidden">
+            <h1 class="text-center module-name">{{ module_name }}</h1>
+            {% for dictionary_name, messages in module_dictionaries %}
+                <div class="dict-holder">
+                    <h4 class="text-center dict-name">{{ dictionary_name }}</h4>
+                    <div class="row" style="max-width: 100%;">
+                    {% for message, translate in messages %}
+                        <div class="message-row {% if translate %}saved hidden{% endif %}" data-dict="{{ dictionary_name }}" data-module="{{ module_name }}" data-lang="{{ language }}">
+                            <div class="column large-6 message-from">
+                                <input type="text" class="incoming" tabindex="-1" readonly="readonly" value="{{ message }}"/>
+                            </div>
+                            <div class="column large-6 message-to">
+                                <div class="move">
+                                    <i class="icon-right-v"></i>
+                                </div>
+
+                                <div class="auto">
+                                    <i class="icon-refresh"></i>
+                                </div>
+
+                                <input type="text" class="translated" value="{{ translate }}"/>
+
+                                <div class="statements">
+                                    <div class="success-saved"><i class="icon-check"></i></div>
+                                    <div class="errors"></div>
+                                </div>
+                            </div>
+                            <p class="clearfix"></p>
+                        </div>
+                    {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endfor %}
+
+    <script>
+        $(function(){
+            function autoTranslate($saveToElement, text)
+            {
+                var url = 'https://translate.yandex.net/api/v1.5/tr.json/translate';
+                var yaApi = 'trnsl.1.1.20141016T064750Z.d04c10048bcbda08.12ddb36f61cdd30a3007cebb66d0c5440e8c90a2';
+
+                $.ajax({
+                    url: url,
+                    type: 'get',
+                    dateType: 'json',
+                    crossDomain: true,
+                    data: {
+                        key: yaApi,
+                        lang: 'en-{{ language }}',
+                        text: text
+                    },
+                    success: function(data){
+                        if (data.text) {
+                            var text = data.text[0];
+                            if (text) {
+                                $saveToElement.val(text);
+                                $saveToElement.blur();
+                            }
+                        }
+                        $(document).trigger('translate-auto');
+                    }
+                });
+            }
+
+            function hideSaved() {
+                $('.module-holder').each(function(){
+                    var $module = $(this);
+                    $module.find('.dict-holder').each(function(){
+                        var $dict = $(this);
+                        var all = $dict.find('.message-row').length;
+                        var saved = $dict.find('.message-row.saved').length;
+                        if (all <= saved){
+                            if (!$dict.hasClass('hidden')){$dict.addClass('hidden')}
+                        }else{
+                            $dict.removeClass('hidden');
+                        }
+                    });
+
+                    var all = $module.find('.dict-holder').length;
+                    var hidden = $module.find('.dict-holder.hidden').length;
+                    if (all <= hidden){
+                        if (!$module.hasClass('hidden')){$module.addClass('hidden')}
+                    }else{
+                        $module.removeClass('hidden');
+                    }
+                });
+                $('.message-row.saved').not('.hidden').addClass('hidden');
+            }
+
+            function showAll() {
+                $('.module-holder').removeClass('hidden');
+                $('.dict-holder').removeClass('hidden');
+                $('.message-row').removeClass('hidden');
+            }
+
+            function translateAll() {
+                var $rows = $('.message-row:not(.saved)');
+                var counter = $rows.length - 1;
+                if (counter > 0) {
+                    var i = 0;
+                    var $row = $rows.eq(i);
+                    $row.find('.auto').click();
+                    i++;
+                    $(document).on('translate-saved', function(e){
+                        if (i <= counter) {
+                            $row = $rows.eq(i);
+                            $row.find('.auto').click();
+                            i++;
+                        } else {
+                            alert('Всё сделано, мой господин!');
+                            $(this).off(e);
+                        }
+                    });
+                }
+            }
+
+            hideSaved();
+
+            $('.message-row .move').on('click', function(e){
+                var $row = $(this).closest('.message-row');
+                var $message = $row.find('.incoming');
+                var $translated = $row.find('.translated');
+                $translated.val($message.val()).blur();
+            });
+
+            $('.message-row .auto').on('click', function(e){
+                var $row = $(this).closest('.message-row');
+                var $message = $row.find('.incoming');
+                var $translated = $row.find('.translated');
+                autoTranslate($translated, $message.val());
+            });
+
+            $('.buttons-block .translate-all').on('click', function(e){
+                e.preventDefault();
+                translateAll();
+                return false;
+            });
+
+            $('.buttons-block .show-all').on('click', function(e){
+                e.preventDefault();
+                showAll();
+                return false;
+            });
+
+            $('.buttons-block .hide-saved').on('click', function(e){
+                e.preventDefault();
+                hideSaved();
+                return false;
+            });
+
+            $('.translated').on('blur', function(e){
+                var $row = $(this).closest('.message-row');
+                var $errors = $row.find('.errors');
+                var message = $row.find('.incoming').val();
+                var translated = $row.find('.translated').val();
+
+                if (translated){
+                    $.ajax({
+                        'type': 'post',
+                        'data': {
+                            'module': $row.data('module'),
+                            'dict': $row.data('dict'),
+                            'lang': $row.data('lang'),
+                            'message': message,
+                            'translated': translated,
+                            '{{ csrf_name }}': '{{ csrf_token }}'
+                        },
+                        'url': '{% url 'translate:process' %}',
+                        'dataType': 'json',
+                        'success': function(data){
+                            $row.find('.errors .error').remove();
+                            if (data.statement == 'success'){
+                                if (!$row.hasClass('saved')){$row.addClass('saved')}
+                            }else{
+                                $row.removeClass('saved');
+                                if (data.message){
+                                    var $error = $('<small/>').addClass('error').html(data.message);
+                                    $errors.append($error);
+                                }
+                            }
+                            $(document).trigger('translate-saved');
+                        }
+                    })
+                }
+            })
+        });
+    </script>
+{% endblock %}
