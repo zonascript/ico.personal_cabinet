@@ -12,6 +12,11 @@ use Modules\Akara\AkaraModule;
 
 class Bonus extends Model
 {
+    public function __toString()
+    {
+        return "{$this->name} ({$this->percent}%)";
+    }
+
     public static function getFields()
     {
         return [

@@ -12,4 +12,15 @@ class CoinAdmin extends ModelAdmin
     {
         return new Coin;
     }
+
+    public function getColumns()
+    {
+        return [
+            'code',
+            'name',
+            'description',
+            'min_amount',
+            'is_active',
+        ];
+    }
 }

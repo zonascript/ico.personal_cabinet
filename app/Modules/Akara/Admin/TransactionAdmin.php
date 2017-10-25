@@ -22,6 +22,7 @@ class TransactionAdmin extends ModelAdmin
             'ico',
             'amount',
             'base_conversion_rate',
+            'bonus',
             'type',
             'status',
             'created_at'

@@ -7,6 +7,7 @@ use Mindy\Orm\Fields\CharField;
 use Mindy\Orm\Fields\DateTimeField;
 use Mindy\Orm\Fields\DecimalField;
 use Mindy\Orm\Fields\ForeignField;
+use Mindy\Orm\Fields\IntField;
 use Mindy\Orm\Model;
 use Modules\Akara\AkaraModule;
 use Modules\User\Models\User;
@@ -38,6 +39,11 @@ class Transaction extends Model
             'base_conversion_rate' => [
                 'class' => DecimalField::className(),
                 'verboseName' => AkaraModule::t("Conversion rate"),
+            ],
+            'bonus' => [
+                'class' => ForeignField::className(),
+                'modelClass' => Bonus::className(),
+                'verboseName' => AkaraModule::t("Bonus"),
             ],
             'type' => [
                 'class' => CharField::className(),
