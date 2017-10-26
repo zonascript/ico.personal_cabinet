@@ -1,7 +1,7 @@
 <?php
-namespace Modules\Akara\Rates\Crypto;
+namespace Modules\Akara\Exchange\Crypto;
 
-  use Modules\Akara\Rates\Interfaces\CryptoExchangeInterface;
+  use Modules\Akara\Exchange\Interfaces\CryptoExchangeInterface;
 
   class CoinExchange extends Crypto implements CryptoExchangeInterface {
 

@@ -1,5 +1,7 @@
 <?php
-namespace Modules\Akara\Rates\Crypto;
+namespace Modules\Akara\Exchange\Crypto;
+
+use Modules\Akara\Exchange\Interfaces\CryptoExchangeInterface;
 
 class Cryptopia extends Crypto implements CryptoExchangeInterface {
 

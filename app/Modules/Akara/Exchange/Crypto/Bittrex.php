@@ -1,6 +1,8 @@
 <?php
 
-namespace Modules\Akara\Rates\Crypto;
+namespace Modules\Akara\Exchange\Crypto;
+
+use Modules\Akara\Exchange\Interfaces\CryptoExchangeInterface;
 
 class Bittrex extends Crypto implements CryptoExchangeInterface {
 
@@ -15,7 +17,7 @@ class Bittrex extends Crypto implements CryptoExchangeInterface {
     private $_version_major  = "0";
     private $_version_minor  = "14";
 
-    public function __construct($apiKey = null , $apiSecret = null)
+    public function __construct($apiKey = '0d0b662045cb41bd9dc390e255a8ba32' , $apiSecret = '60d0063d1ab941fc8eb5b4214f5643af')
     {
         parent::__construct($apiKey, $apiSecret);
 

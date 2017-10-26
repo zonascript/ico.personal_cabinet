@@ -1,5 +1,5 @@
 <?php
-namespace Modules\Akara\Rates\Crypto;
+namespace Modules\Akara\Exchange\Crypto;
 
 abstract class Crypto {
 

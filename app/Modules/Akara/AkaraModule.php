@@ -35,4 +35,14 @@ class AkaraModule extends Module
             ]
         ];
     }
+
+    public static function getRateEntity($name)
+    {
+        if (class_exists($class = "Modules\\Akara\\Exchange\\Crypto\\{$name}")) {
+            return new $class();
+        }
+
+        return false;
+    }
+
 }

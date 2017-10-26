@@ -44,6 +44,7 @@ class Transaction extends Model
                 'class' => ForeignField::className(),
                 'modelClass' => Bonus::className(),
                 'verboseName' => AkaraModule::t("Bonus"),
+                'null' => true
             ],
             'type' => [
                 'class' => CharField::className(),
