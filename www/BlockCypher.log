@@ -1,0 +1,285 @@
+[01-11-2017 03:53:47] BlockCypher\Core\BlockCypherHttpConnection: INFO	: GET https://api.blockcypher.com/v1/btc/main/addrs/1DEP8i3QJCsomS4BSMY2RpU1upv62aGvhD/balance?token=ddccefcc72a04e429345096ac01fc2a5
+[01-11-2017 03:53:48] BlockCypher\Core\BlockCypherHttpConnection: DEBUG	: Request Headers 	: GET /v1/btc/main/addrs/1DEP8i3QJCsomS4BSMY2RpU1upv62aGvhD/balance?token=ddccefcc72a04e429345096ac01fc2a5 HTTP/1.1, Host: api.blockcypher.com, Accept: */*, Content-Type: application/json, User-Agent: BlockCypherSDK/BlockCypher-PHP-SDK 1.5.0 (lang=PHP;v=7.0.8;bit=64;os=Windows_NT_10.0;machine=AMD64;openssl=1.0.2h;curl=7.49.1), , 
+[01-11-2017 03:53:48] BlockCypher\Core\BlockCypherHttpConnection: DEBUG	: No Request Payload
+--------------------------------------------------------------------------------------------------------------------------------
+
+[01-11-2017 03:53:48] BlockCypher\Core\BlockCypherHttpConnection: INFO	: Response Status 	: 200
+[01-11-2017 03:53:48] BlockCypher\Core\BlockCypherHttpConnection: DEBUG	: Response Headers	: HTTP/1.1 200 OK, Server: nginx/1.13.4, Date: Wed, 01 Nov 2017 12:53:36 GMT, Content-Type: application/json, Content-Length: 236, Connection: keep-alive, Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Methods: GET, POST, PUT, DELETE, Access-Control-Allow-Origin: *, X-Ratelimit-Remaining: 199, , 
+[01-11-2017 03:53:48] BlockCypher\Core\BlockCypherHttpConnection: DEBUG	: Response Data 	: {
+  "address": "1DEP8i3QJCsomS4BSMY2RpU1upv62aGvhD",
+  "total_received": 4449209,
+  "total_sent": 0,
+  "balance": 4449209,
+  "unconfirmed_balance": 0,
+  "final_balance": 4449209,
+  "n_tx": 9,
+  "unconfirmed_n_tx": 0,
+  "final_n_tx": 9
+}
+
+================================================================================================================================
+
+[01-11-2017 03:55:04] BlockCypher\Core\BlockCypherHttpConnection: INFO	: GET https://api.blockcypher.com/v1/btc/main/addrs/1DEP8i3QJCsomS4BSMY2RpU1upv62aGvhD?token=ddccefcc72a04e429345096ac01fc2a5
+[01-11-2017 03:55:04] BlockCypher\Core\BlockCypherHttpConnection: DEBUG	: Request Headers 	: GET /v1/btc/main/addrs/1DEP8i3QJCsomS4BSMY2RpU1upv62aGvhD?token=ddccefcc72a04e429345096ac01fc2a5 HTTP/1.1, Host: api.blockcypher.com, Accept: */*, Content-Type: application/json, User-Agent: BlockCypherSDK/BlockCypher-PHP-SDK 1.5.0 (lang=PHP;v=7.0.8;bit=64;os=Windows_NT_10.0;machine=AMD64;openssl=1.0.2h;curl=7.49.1), , 
+[01-11-2017 03:55:04] BlockCypher\Core\BlockCypherHttpConnection: DEBUG	: No Request Payload
+--------------------------------------------------------------------------------------------------------------------------------
+
+[01-11-2017 03:55:04] BlockCypher\Core\BlockCypherHttpConnection: INFO	: Response Status 	: 200
+[01-11-2017 03:55:04] BlockCypher\Core\BlockCypherHttpConnection: DEBUG	: Response Headers	: HTTP/1.1 200 OK, Server: nginx/1.13.4, Date: Wed, 01 Nov 2017 12:54:52 GMT, Content-Type: application/json, Transfer-Encoding: chunked, Connection: keep-alive, Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Methods: GET, POST, PUT, DELETE, Access-Control-Allow-Origin: *, X-Ratelimit-Remaining: 198, , 
+[01-11-2017 03:55:04] BlockCypher\Core\BlockCypherHttpConnection: DEBUG	: Response Data 	: {
+  "address": "1DEP8i3QJCsomS4BSMY2RpU1upv62aGvhD",
+  "total_received": 4449209,
+  "total_sent": 0,
+  "balance": 4449209,
+  "unconfirmed_balance": 0,
+  "final_balance": 4449209,
+  "n_tx": 9,
+  "unconfirmed_n_tx": 0,
+  "final_n_tx": 9,
+  "txrefs": [
+    {
+      "tx_hash": "136c395e49c64eebe07d4fd540bc31a331c0a608a3afa9d35702ee8d55afe920",
+      "block_height": 441804,
+      "tx_input_n": -1,
+      "tx_output_n": 4,
+      "value": 5831,
+      "ref_balance": 4449209,
+      "spent": false,
+      "confirmations": 50826,
+      "confirmed": "2016-12-04T00:09:58Z",
+      "double_spend": false
+    },
+    {
+      "tx_hash": "ce53a6ed8b8f6b39cf86d4f300c12a33b69816014cc7261f4ced8b0e23bd4aeb",
+      "block_height": 382021,
+      "tx_input_n": -1,
+      "tx_output_n": 2,
+      "value": 9962,
+      "ref_balance": 4443378,
+      "spent": false,
+      "confirmations": 110609,
+      "confirmed": "2015-11-04T14:28:14Z",
+      "double_spend": false
+    },
+    {
+      "tx_hash": "14b1052855bbf6561bc4db8aa501762e7cc1e86994dda9e782a6b73b1ce0dc1e",
+      "block_height": 302013,
+      "tx_input_n": -1,
+      "tx_output_n": 0,
+      "value": 20213,
+      "ref_balance": 4433416,
+      "spent": false,
+      "confirmations": 190617,
+      "confirmed": "2014-05-22T03:46:25Z",
+      "double_spend": false
+    },
+    {
+      "tx_hash": "4cff011ec53022f2ae47197d1a2fd4a6ac2a80139f4d0131c1fed625ed5dc869",
+      "block_height": 302002,
+      "tx_input_n": -1,
+      "tx_output_n": 0,
+      "value": 40596,
+      "ref_balance": 4413203,
+      "spent": false,
+      "confirmations": 190628,
+      "confirmed": "2014-05-22T02:56:08Z",
+      "double_spend": false
+    },
+    {
+      "tx_hash": "ea1cbb874ed4e40add51b4d65b877dc4e8d69bb63f5b2220a79d673c413b778a",
+      "block_height": 302002,
+      "tx_input_n": -1,
+      "tx_output_n": 0,
+      "value": 101491,
+      "ref_balance": 4372607,
+      "spent": false,
+      "confirmations": 190628,
+      "confirmed": "2014-05-22T02:56:08Z",
+      "double_spend": false
+    },
+    {
+      "tx_hash": "b4735a0690dab16b8789fceaf81c511f3be484e319f684cc214380eaa2851030",
+      "block_height": 292586,
+      "tx_input_n": -1,
+      "tx_output_n": 0,
+      "value": 3500000,
+      "ref_balance": 4271116,
+      "spent": false,
+      "confirmations": 200044,
+      "confirmed": "2014-03-26T17:08:04Z",
+      "double_spend": false
+    },
+    {
+      "tx_hash": "0416b8db5db4fa088437008aea7889e966e326f11c52c1da95161cd2ded95185",
+      "block_height": 292505,
+      "tx_input_n": -1,
+      "tx_output_n": 0,
+      "value": 100000,
+      "ref_balance": 771116,
+      "spent": false,
+      "confirmations": 200125,
+      "confirmed": "2014-03-26T04:18:38Z",
+      "double_spend": false
+    },
+    {
+      "tx_hash": "995a50e05d197be88d4da74160b4bcd2c363ebb1a49f95e572667d580bc70aba",
+      "block_height": 292455,
+      "tx_input_n": -1,
+      "tx_output_n": 0,
+      "value": 500000,
+      "ref_balance": 671116,
+      "spent": false,
+      "confirmations": 200175,
+      "confirmed": "2014-03-25T21:32:08Z",
+      "double_spend": false
+    },
+    {
+      "tx_hash": "0c83c8321537a7c79dc6214788944ba6cd5ea76f0594453b6251fcf1856f2e4b",
+      "block_height": 292325,
+      "tx_input_n": -1,
+      "tx_output_n": 0,
+      "value": 171116,
+      "ref_balance": 171116,
+      "spent": false,
+      "confirmations": 200305,
+      "confirmed": "2014-03-25T00:07:31Z",
+      "double_spend": false
+    }
+  ],
+  "tx_url": "https://api.blockcypher.com/v1/btc/main/txs/"
+}
+
+================================================================================================================================
+
+[03-11-2017 11:31:54] BlockCypher\Core\BlockCypherHttpConnection: INFO	: GET https://api.blockcypher.com/v1/btc/main/addrs/1DEP8i3QJCsomS4BSMY2RpU1upv62aGvhD?token=ddccefcc72a04e429345096ac01fc2a5
+[03-11-2017 11:31:55] BlockCypher\Core\BlockCypherHttpConnection: DEBUG	: Request Headers 	: GET /v1/btc/main/addrs/1DEP8i3QJCsomS4BSMY2RpU1upv62aGvhD?token=ddccefcc72a04e429345096ac01fc2a5 HTTP/1.1, Host: api.blockcypher.com, Accept: */*, Content-Type: application/json, User-Agent: BlockCypherSDK/BlockCypher-PHP-SDK 1.5.0 (lang=PHP;v=7.0.8;bit=64;os=Windows_NT_10.0;machine=AMD64;openssl=1.0.2h;curl=7.49.1), , 
+[03-11-2017 11:31:55] BlockCypher\Core\BlockCypherHttpConnection: DEBUG	: No Request Payload
+--------------------------------------------------------------------------------------------------------------------------------
+
+[03-11-2017 11:31:55] BlockCypher\Core\BlockCypherHttpConnection: INFO	: Response Status 	: 200
+[03-11-2017 11:31:55] BlockCypher\Core\BlockCypherHttpConnection: DEBUG	: Response Headers	: HTTP/1.1 200 OK, Server: nginx/1.13.4, Date: Fri, 03 Nov 2017 08:31:55 GMT, Content-Type: application/json, Transfer-Encoding: chunked, Connection: keep-alive, Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Methods: GET, POST, PUT, DELETE, Access-Control-Allow-Origin: *, X-Ratelimit-Remaining: 199, , 
+[03-11-2017 11:31:55] BlockCypher\Core\BlockCypherHttpConnection: DEBUG	: Response Data 	: {
+  "address": "1DEP8i3QJCsomS4BSMY2RpU1upv62aGvhD",
+  "total_received": 4449209,
+  "total_sent": 0,
+  "balance": 4449209,
+  "unconfirmed_balance": 0,
+  "final_balance": 4449209,
+  "n_tx": 9,
+  "unconfirmed_n_tx": 0,
+  "final_n_tx": 9,
+  "txrefs": [
+    {
+      "tx_hash": "136c395e49c64eebe07d4fd540bc31a331c0a608a3afa9d35702ee8d55afe920",
+      "block_height": 441804,
+      "tx_input_n": -1,
+      "tx_output_n": 4,
+      "value": 5831,
+      "ref_balance": 4449209,
+      "spent": false,
+      "confirmations": 51101,
+      "confirmed": "2016-12-04T00:09:58Z",
+      "double_spend": false
+    },
+    {
+      "tx_hash": "ce53a6ed8b8f6b39cf86d4f300c12a33b69816014cc7261f4ced8b0e23bd4aeb",
+      "block_height": 382021,
+      "tx_input_n": -1,
+      "tx_output_n": 2,
+      "value": 9962,
+      "ref_balance": 4443378,
+      "spent": false,
+      "confirmations": 110884,
+      "confirmed": "2015-11-04T14:28:14Z",
+      "double_spend": false
+    },
+    {
+      "tx_hash": "14b1052855bbf6561bc4db8aa501762e7cc1e86994dda9e782a6b73b1ce0dc1e",
+      "block_height": 302013,
+      "tx_input_n": -1,
+      "tx_output_n": 0,
+      "value": 20213,
+      "ref_balance": 4433416,
+      "spent": false,
+      "confirmations": 190892,
+      "confirmed": "2014-05-22T03:46:25Z",
+      "double_spend": false
+    },
+    {
+      "tx_hash": "4cff011ec53022f2ae47197d1a2fd4a6ac2a80139f4d0131c1fed625ed5dc869",
+      "block_height": 302002,
+      "tx_input_n": -1,
+      "tx_output_n": 0,
+      "value": 40596,
+      "ref_balance": 4413203,
+      "spent": false,
+      "confirmations": 190903,
+      "confirmed": "2014-05-22T02:56:08Z",
+      "double_spend": false
+    },
+    {
+      "tx_hash": "ea1cbb874ed4e40add51b4d65b877dc4e8d69bb63f5b2220a79d673c413b778a",
+      "block_height": 302002,
+      "tx_input_n": -1,
+      "tx_output_n": 0,
+      "value": 101491,
+      "ref_balance": 4372607,
+      "spent": false,
+      "confirmations": 190903,
+      "confirmed": "2014-05-22T02:56:08Z",
+      "double_spend": false
+    },
+    {
+      "tx_hash": "b4735a0690dab16b8789fceaf81c511f3be484e319f684cc214380eaa2851030",
+      "block_height": 292586,
+      "tx_input_n": -1,
+      "tx_output_n": 0,
+      "value": 3500000,
+      "ref_balance": 4271116,
+      "spent": false,
+      "confirmations": 200319,
+      "confirmed": "2014-03-26T17:08:04Z",
+      "double_spend": false
+    },
+    {
+      "tx_hash": "0416b8db5db4fa088437008aea7889e966e326f11c52c1da95161cd2ded95185",
+      "block_height": 292505,
+      "tx_input_n": -1,
+      "tx_output_n": 0,
+      "value": 100000,
+      "ref_balance": 771116,
+      "spent": false,
+      "confirmations": 200400,
+      "confirmed": "2014-03-26T04:18:38Z",
+      "double_spend": false
+    },
+    {
+      "tx_hash": "995a50e05d197be88d4da74160b4bcd2c363ebb1a49f95e572667d580bc70aba",
+      "block_height": 292455,
+      "tx_input_n": -1,
+      "tx_output_n": 0,
+      "value": 500000,
+      "ref_balance": 671116,
+      "spent": false,
+      "confirmations": 200450,
+      "confirmed": "2014-03-25T21:32:08Z",
+      "double_spend": false
+    },
+    {
+      "tx_hash": "0c83c8321537a7c79dc6214788944ba6cd5ea76f0594453b6251fcf1856f2e4b",
+      "block_height": 292325,
+      "tx_input_n": -1,
+      "tx_output_n": 0,
+      "value": 171116,
+      "ref_balance": 171116,
+      "spent": false,
+      "confirmations": 200580,
+      "confirmed": "2014-03-25T00:07:31Z",
+      "double_spend": false
+    }
+  ],
+  "tx_url": "https://api.blockcypher.com/v1/btc/main/txs/"
+}
+
+================================================================================================================================
+

@@ -17,6 +17,10 @@ class Bittrex extends Crypto implements CryptoExchangeInterface {
     private $_version_major  = "0";
     private $_version_minor  = "14";
 
+    private $code_relations = [
+        'BCH' => 'BCC'
+    ];
+
     public function __construct($apiKey = '0d0b662045cb41bd9dc390e255a8ba32' , $apiSecret = '60d0063d1ab941fc8eb5b4214f5643af')
     {
         parent::__construct($apiKey, $apiSecret);
@@ -279,6 +283,16 @@ class Bittrex extends Crypto implements CryptoExchangeInterface {
     public function getDepositHistory($args = null) {
       if(!isSet($args["currency"])) return $this->getErrorReturn("required parameter: currency");
       return $this->send("account/getdeposithistory" , $args);
+    }
+
+    public function getMarketPair($market = "" , $currency = "") {
+        if (isset($this->code_relations[$market])) {
+            $market = $this->code_relations[$market];
+        }
+        if (isset($this->code_relations[$currency])) {
+            $currency = $this->code_relations[$currency];
+        }
+        return strtoupper($market . "-" . $currency);
     }
 
     /* ------ END account api methodes ------ */

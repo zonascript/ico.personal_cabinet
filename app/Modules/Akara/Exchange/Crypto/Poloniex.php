@@ -5,10 +5,10 @@ namespace Modules\Akara\Exchange\Crypto;
 
 use Modules\Akara\Exchange\Interfaces\CryptoExchangeInterface;
 
-class Bitfinex extends Crypto implements CryptoExchangeInterface
+class Poloniex extends Crypto implements CryptoExchangeInterface
 {
     // base exchange api url
-    private $exchangeUrl = "https://api.bitfinex.com/v1";
+    private $exchangeUrl = "https://poloniex.com/public";
 
     public function __construct($apiKey = null, $apiSecret = null)
     {
@@ -21,7 +21,7 @@ class Bitfinex extends Crypto implements CryptoExchangeInterface
         if (empty($method)) return $this->getErrorReturn("method was not defined!");
 
         $urlParams = $args;
-        $uri = $this->getBaseUrl() . $method . '/' . $urlParams['market'];
+        $uri = $this->getBaseUrl() . "?command={$method}";
 
         $ch = curl_init();
 
@@ -49,17 +49,17 @@ class Bitfinex extends Crypto implements CryptoExchangeInterface
 
     public function getMarketPair($market = "", $currency = "")
     {
-        return strtolower($currency . $market);
+        return strtoupper($market ."_". $currency);
     }
 
     public function getTicker($args = null)
     {
-        $response = $this->send("pubticker", $args, false);
+        $response = $this->send("returnTicker", $args, false);
         if(isSet($response["result"]) && !empty($response["result"])) {
-            $result             = $response["result"];
-            $result["Last"]     = floatval($result["last_price"]);
-            $result["Bid"]      = floatval($result["bid"]);
-            $result["Ask"]      = floatval($result["ask"]);
+            $result             = $response["result"][$args['market']];
+            $result["Last"]     = floatval($result["last"]);
+            $result["Bid"]      = floatval($result["highestBid"]);
+            $result["Ask"]      = floatval($result["lowestAsk"]);
             $response["result"] = $result;
         }
         return $response;
