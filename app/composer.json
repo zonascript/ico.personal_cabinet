@@ -36,9 +36,15 @@
         "hindy/application": "0.*",
         "hindy/tests": "0.*",
         "hindy/table": "0.*",
-        "blockcypher/php-client": "*"
+        "blockcypher/php-client": "*",
+        "swiftmailer/swiftmailer": "5.4.4",
+        "blocktrail/blocktrail-sdk": "3.*"
     },
     "require-dev": {
+        "phpunit/phpunit": "3.7.32",
+        "phpunit/dbunit": "1.3.1",
+        "phpunit/phpunit-selenium": "1.3.3",
+        "phpunit/phpunit-story": "1.0.2",
         "satooshi/php-coveralls": "dev-master"
     },
     "authors": [{

@@ -33,8 +33,8 @@ class Eth extends AddressBase
             if ($txns = $addr->getAllTxrefs()) {
                 foreach ($txns as $txn) {
                     $res[] = [
-                        'value' => self::WeiToEth($txn->getValue()),
-                        'original_value' => $txn->getValue(),
+                        //'value' => self::WeiToEth($txn->getValue()),
+                        'value' => $txn->getValue(),
                         'confirmations' => $txn->getConfirmations(),
                         'block' => $txn->getBlockHeight(),
                         'txn_hash' => $txn->getTxHash(),

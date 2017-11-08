@@ -34,12 +34,11 @@ class Btc  extends AddressBase
                 foreach ($txns as $txn) {
                     $res[] = [
                         'value' => $txn->getValue(),
-                        'original_value' => $txn->getValue(),
                         'confirmations' => $txn->getConfirmations(),
                         'block' => $txn->getBlockHeight(),
                         'txn_hash' => $txn->getTxHash(),
                         'date' => $txn->getConfirmed(),
-                        'input' => ($txn->getTxInputN() === 0) ? true : false,
+                        'input' => $txn->getTxOutputN() >= 0,
                     ];
                 }
             }

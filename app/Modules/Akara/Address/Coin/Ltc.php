@@ -33,7 +33,6 @@ class Ltc extends AddressBase
                 foreach ($txns as $txn) {
                     $res[] = [
                         'value' => $txn->getValue(),
-                        'original_value' => $txn->getValue(),
                         'confirmations' => $txn->getConfirmations(),
                         'block' => $txn->getBlockHeight(),
                         'txn_hash' => $txn->getTxHash(),
@@ -44,7 +43,5 @@ class Ltc extends AddressBase
             }
         }
         return $res;
-
-        return null;
     }
 }

@@ -14,22 +14,25 @@ use Modules\Akara\Models\Ico;
 use Modules\Akara\Models\Rates;
 use ResultPrinter;
 
+
 class AkaraCommand extends ConsoleCommand
 {
     public function actionGetRates()
     {
-        $address = '1DEP8i3QJCsomS4BSMY2RpU1upv62aGvhD'; //BTC
 
-        $address = '0x313e6f2d80601249213859d308a588e7757c8b59'; //ETH
-        $address = 'LiBhd5jfJFrRUnLJFkS1r7PivWSKZMg7ZB'; //ETH
+        $address = '1HBB6wHbhHBmsNmoBzzKdq77LKQUcUhGp3'; //BTC
 
-        $address = '1A4B5tPJeQr4WapSFLhJa4oHZyHptK4o8w'; //BCC
+        /*$address = '0x313e6f2d80601249213859d308a588e7757c8b59'; //ETH
+        $address = 'LiBhd5jfJFrRUnLJFkS1r7PivWSKZMg7ZB'; //LTC
+
+        $address = '1A4B5tPJeQr4WapSFLhJa4oHZyHptK4o8w'; //BCH*/
 
         $coin_address = AddressBase::getAddressEntity('BTC', $address);
 
         $txns = $coin_address->getTransactions($address);
 
-        dd($txns);
+        print_r($txns);
+
 
         exit;
 
