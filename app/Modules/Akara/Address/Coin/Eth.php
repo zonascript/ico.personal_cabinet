@@ -33,13 +33,12 @@ class Eth extends AddressBase
             if ($txns = $addr->getAllTxrefs()) {
                 foreach ($txns as $txn) {
                     $res[] = [
-                        //'value' => self::WeiToEth($txn->getValue()),
-                        'value' => $txn->getValue(),
+                        'value' => self::WeiToEth($txn->getValue()),
                         'confirmations' => $txn->getConfirmations(),
                         'block' => $txn->getBlockHeight(),
                         'txn_hash' => $txn->getTxHash(),
-                        'date' => $txn->getConfirmed(),
-                        'input' => ($txn->getTxInputN() === 0) ? true : false,
+                        'date' => static::convertDate($txn->getConfirmed()),
+                        'input' => $txn->getTxOutputN() >= 0,
                     ];
                 }
             }
@@ -52,5 +51,10 @@ class Eth extends AddressBase
     {
 
         return $wei / pow(10, 18);
+    }
+
+    public static function convertDate($date)
+    {
+        return \DateTime::createFromFormat(DATE_ISO8601, $date);
     }
 }

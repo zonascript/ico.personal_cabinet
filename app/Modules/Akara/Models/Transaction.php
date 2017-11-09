@@ -14,23 +14,18 @@ use Modules\User\Models\User;
 
 class Transaction extends Model
 {
+    const TRANSACTION_TYPE_PURCHASE = 'purchase';
+    const TRANSACTION_TYPE_WITHDRAW = 'withdraw';
+    const TRANSACTION_STATUS_PENDING = 'pending';
+    const TRANSACTION_STATUS_COMPLETE = 'complete';
+
     public static function getFields()
     {
         return [
-            'ico' => [
+            'token' => [
                 'class' => ForeignField::className(),
-                'modelClass' => Ico::className(),
-                'verboseName' => AkaraModule::t("ICO"),
-            ],
-            'coin' => [
-                'class' => ForeignField::className(),
-                'modelClass' => Coin::className(),
-                'verboseName' => AkaraModule::t("Coin"),
-            ],
-            'user' => [
-                'class' => ForeignField::className(),
-                'modelClass' => User::className(),
-                'verboseName' => AkaraModule::t("User"),
+                'modelClass' => Token::className(),
+                'verboseName' => AkaraModule::t("Token"),
             ],
             'amount' => [
                 'class' => DecimalField::className(),

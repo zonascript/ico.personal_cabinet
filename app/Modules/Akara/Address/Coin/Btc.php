@@ -5,6 +5,7 @@ namespace Modules\Akara\Address\Coin;
 
 use BlockCypher\Auth\SimpleTokenCredential;
 use BlockCypher\Client\AddressClient;
+use BlockCypher\Converter\BtcConverter;
 use BlockCypher\Rest\ApiContext;
 use Modules\Akara\Address\Interfaces\AddressInterface;
 
@@ -33,11 +34,11 @@ class Btc  extends AddressBase
             if ($txns = $addr->getAllTxrefs()) {
                 foreach ($txns as $txn) {
                     $res[] = [
-                        'value' => $txn->getValue(),
+                        'value' => BtcConverter::satoshisToBtc($txn->getValue()),
                         'confirmations' => $txn->getConfirmations(),
                         'block' => $txn->getBlockHeight(),
                         'txn_hash' => $txn->getTxHash(),
-                        'date' => $txn->getConfirmed(),
+                        'date' => static::convertDate($txn->getConfirmed()),
                         'input' => $txn->getTxOutputN() >= 0,
                     ];
                 }
@@ -47,4 +48,9 @@ class Btc  extends AddressBase
 
         return null;
     }
+
+    public static function convertDate($date)
+{
+    return \DateTime::createFromFormat(DATE_ISO8601, $date);
+}
 }

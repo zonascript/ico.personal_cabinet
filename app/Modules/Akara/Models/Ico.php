@@ -6,6 +6,7 @@ namespace Modules\Akara\Models;
 use Mindy\Orm\Fields\CharField;
 use Mindy\Orm\Fields\DateTimeField;
 use Mindy\Orm\Fields\ForeignField;
+use Mindy\Orm\Fields\HasManyField;
 use Mindy\Orm\Model;
 use Modules\Akara\AkaraModule;
 
@@ -35,6 +36,16 @@ class Ico extends Model
                 'class' => ForeignField::className(),
                 'modelClass' => Coin::className(),
                 'verboseName' => AkaraModule::t("Base Coin"),
+            ],
+            'tokens' => [
+                'class' => HasManyField::className(),
+                'modelClass' => Token::className(),
+                'verboseName' => AkaraModule::t("Tokens"),
+            ],
+            'bonuses' => [
+                'class' => HasManyField::className(),
+                'modelClass' => Bonus::className(),
+                'verboseName' => AkaraModule::t("Bonuses"),
             ],
             'created_at' => [
                 'class' => DateTimeField::className(),

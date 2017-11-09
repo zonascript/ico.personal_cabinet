@@ -4,7 +4,7 @@ namespace Modules\Akara\Admin;
 
 
 use Modules\Admin\Components\ModelAdmin;
-use Modules\Akara\Models\Pool;
+use Modules\Akara\Models\Token;
 
 class PoolAdmin extends ModelAdmin
 {
@@ -12,7 +12,7 @@ class PoolAdmin extends ModelAdmin
 
     public function getModel()
     {
-        return new Pool;
+        return new Token;
     }
 
     public function getColumns()

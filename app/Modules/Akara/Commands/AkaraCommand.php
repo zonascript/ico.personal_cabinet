@@ -2,39 +2,71 @@
 
 namespace Modules\Akara\Commands;
 
-
 use BlockCypher\Auth\SimpleTokenCredential;
 use BlockCypher\Client\AddressClient;
 use BlockCypher\Rest\ApiContext;
 use Mindy\Console\ConsoleCommand;
+use Mindy\Query\Expression;
 use Modules\Akara\Address\Coin\AddressBase;
-use Modules\Akara\Exchange\Crypto\Bittrex;
 use Modules\Akara\Models\Coin;
 use Modules\Akara\Models\Ico;
 use Modules\Akara\Models\Rates;
-use ResultPrinter;
+use Modules\Akara\Models\Transaction;
+use Modules\Akara\Helpers\BonusHelper;
 
 
 class AkaraCommand extends ConsoleCommand
 {
+    public function actionGetTransactions()
+    {
+        $created_cnt = 0;
+
+        if ($icos = Ico::objects()->filter(
+            [
+                'end_date__gte' => new Expression('now()'),
+                'start_date__lte' => new Expression('now()')
+            ])->all())
+        {
+            foreach ($icos as $ico) {
+                foreach ($ico->tokens as $token) {
+
+                    $coin_address = AddressBase::getAddressEntity($token->coin->code, $token->token);
+
+                    if ($txns = $coin_address->getTransactions()) {
+                        foreach ($txns as $txn) {
+                            if ($txn['input']) {
+
+                                list($t_model, $created) = Transaction::objects()->getOrCreate(['token' => $token, 'hash' => $txn['txn_hash']]);
+
+                                if ($created) {
+                                    $t_model->setAttributes(
+                                        [
+                                            'confirmations' => $txn['confirmations'],
+                                            'amount' => $txn['value'],
+                                            'date' => $txn['date']->format('Y-m-d H:i:s'),
+                                            'type' => Transaction::TRANSACTION_TYPE_PURCHASE,
+                                            'bonus' => BonusHelper::getActiveBonus($ico),
+                                            'status' => Transaction::TRANSACTION_STATUS_COMPLETE
+                                        ]
+                                    );
+                                    $t_model->save();
+                                    $created_cnt++;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if ($created_cnt) {
+            echo "Created $created_cnt new transactions\n";
+        }
+
+    }
+
     public function actionGetRates()
     {
-
-        $address = '1HBB6wHbhHBmsNmoBzzKdq77LKQUcUhGp3'; //BTC
-
-        /*$address = '0x313e6f2d80601249213859d308a588e7757c8b59'; //ETH
-        $address = 'LiBhd5jfJFrRUnLJFkS1r7PivWSKZMg7ZB'; //LTC
-
-        $address = '1A4B5tPJeQr4WapSFLhJa4oHZyHptK4o8w'; //BCH*/
-
-        $coin_address = AddressBase::getAddressEntity('BTC', $address);
-
-        $txns = $coin_address->getTransactions($address);
-
-        print_r($txns);
-
-
-        exit;
 
         $markets = [
             'bittrex' => self::getModule()->getRateEntity('Bittrex'),

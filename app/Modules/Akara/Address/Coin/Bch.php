@@ -5,6 +5,7 @@ namespace Modules\Akara\Address\Coin;
 
 use Modules\Akara\Address\Interfaces\AddressInterface;
 use \Blocktrail\SDK\BlocktrailSDK;
+use BlockCypher\Converter\BtcConverter;
 
 class Bch extends AddressBase
 {
@@ -51,12 +52,11 @@ class Bch extends AddressBase
                         if ($out) {
                             foreach ($out as $tout) {
                                 $res[] = [
-                                    'value' => $tout['value'],
-                                    'original_value' => $tout['value'],
+                                    'value' => BtcConverter::satoshisToBtc($tout['value']),
                                     'confirmations' => $txn['confirmations'],
                                     'block' => '',
                                     'txn_hash' => $txn['hash'],
-                                    'date' => $txn['time'],
+                                    'date' => static::convertDate($txn['time']),
                                     'input' => true,
                                 ];
                             }
@@ -66,5 +66,10 @@ class Bch extends AddressBase
 
         }
         return $res;
+    }
+
+    public static function convertDate($date)
+    {
+        return \DateTime::createFromFormat(DATE_ISO8601, $date);
     }
 }

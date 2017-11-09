@@ -9,7 +9,7 @@ use Mindy\Orm\Model;
 use Modules\Akara\AkaraModule;
 use Modules\User\Models\User;
 
-class Pool extends Model
+class Token extends Model
 {
     public static function getFields()
     {
@@ -21,6 +21,12 @@ class Pool extends Model
                 'class' => ForeignField::className(),
                 'modelClass' => Coin::className(),
                 'verboseName' => AkaraModule::t("Coin"),
+            ],
+            'ico' => [
+                'class' => ForeignField::className(),
+                'modelClass' => Ico::className(),
+                'null' => true,
+                'verboseName' => AkaraModule::t("Ico"),
             ],
             'user' => [
                 'class' => ForeignField::className(),
