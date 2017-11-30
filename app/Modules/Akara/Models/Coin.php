@@ -22,7 +22,7 @@ class Coin extends Model
         return [
             'code' => [
                 'class' => CharField::className(),
-                'verboseName' => AkaraModule::t("Coin code"),
+                'verboseName' => AkaraModule::t("Ticker"),
             ],
             'name' => [
                 'class' => CharField::className(),

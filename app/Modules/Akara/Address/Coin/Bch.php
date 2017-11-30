@@ -3,16 +3,11 @@
 namespace Modules\Akara\Address\Coin;
 
 
-use Modules\Akara\Address\Interfaces\AddressInterface;
 use \Blocktrail\SDK\BlocktrailSDK;
 use BlockCypher\Converter\BtcConverter;
 
 class Bch extends AddressBase
 {
-    public function getAddressInfo()
-    {
-
-    }
 
     public function getTransactions()
     {
