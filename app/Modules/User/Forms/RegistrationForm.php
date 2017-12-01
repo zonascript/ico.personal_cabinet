@@ -4,6 +4,7 @@ namespace Modules\User\Forms;
 
 use Mindy\Base\Mindy;
 use Mindy\Form\Fields\CharField;
+use Mindy\Form\Fields\CheckboxField;
 use Mindy\Form\Fields\EmailField;
 use Mindy\Form\Fields\PasswordField;
 use Mindy\Form\Fields\RecaptchaField;
@@ -22,7 +23,7 @@ class RegistrationForm extends Form
     public function getFields()
     {
         $fields = [
-            'username' => [
+            /*'username' => [
                 'class' => CharField::className(),
                 'label' => UserModule::t('Username'),
                 'required' => true,
@@ -34,11 +35,31 @@ class RegistrationForm extends Form
                         return true;
                     }
                 ]
+            ],*/
+            'f_name' => [
+                'class' => CharField::className(),
+                'required' => true,
+                'label' => false,
+                'validators' => [
+                ],
+                'html' => [
+                    'placeholder' => UserModule::t('First name')
+                ]
+            ],
+            'l_name' => [
+                'class' => CharField::className(),
+                'required' => true,
+                'label' => false,
+                'validators' => [
+                ],
+                'html' => [
+                    'placeholder' => UserModule::t('Last name')
+                ]
             ],
             'email' => [
                 'class' => EmailField::className(),
-                'label' => UserModule::t('Email'),
                 'required' => true,
+                'label' => false,
                 'validators' => [
                     function ($value) {
                         if (User::objects()->filter(['email' => $value])->count() > 0) {
@@ -46,21 +67,60 @@ class RegistrationForm extends Form
                         }
                         return true;
                     }
+                ],
+                'html' => [
+                    'placeholder' => UserModule::t('Email')
                 ]
             ],
             'password' => [
                 'class' => PasswordField::className(),
+                'label' => false,
                 'validators' => [
-                    new MinLengthValidator(6)
+                    new MinLengthValidator(8)
                 ],
-                'label' => UserModule::t('Password')
+                'html' => [
+                    'placeholder' => UserModule::t('Password')
+                ]
             ],
             'password_repeat' => [
                 'class' => PasswordField::className(),
+                'label' => false,
                 'validators' => [
-                    new MinLengthValidator(6)
+                    new MinLengthValidator(8)
                 ],
-                'label' => UserModule::t('Password repeat')
+                'html' => [
+                    'placeholder' => UserModule::t('Password repeat')
+                ]
+            ],
+            '2fa_enabled' => [
+                'class' => CheckboxField::className(),
+                'validators' => [
+                ],
+                'label' => UserModule::t('Enable 2 FA'),
+            ],
+            'not_us' => [
+                'class' => CheckboxField::className(),
+                'validators' => [
+                    function ($value) {
+                        if (!$value) {
+                            return UserModule::t("US citizen cannot be registered!");
+                        }
+                        return true;
+                    }
+                ],
+                'label' => UserModule::t('I am not a US resident')
+            ],
+            'accept_terms' => [
+                'class' => CheckboxField::className(),
+                'validators' => [
+                    function ($value) {
+                        if (!$value) {
+                            return UserModule::t("Terms not accepted!");
+                        }
+                        return true;
+                    }
+                ],
+                'label' => UserModule::t("Accept token sale <a class='terms' href='/'>terms and conditions</a>")
             ],
         ];
 

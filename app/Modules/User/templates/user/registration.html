@@ -1,16 +1,21 @@
 {% extends "user/base.html" %}
 
 {% block heading %}
-    <h1>{{ t('Registration', 'user') }}</h1>
+
 {% endblock %}
 
 {% block content %}
-    <div class="registration-form">
+    <input id="tab-1" type="radio" name="tab-group" checked="checked" />
+    <label for="tab-1">{{ t('Login', 'user') }}</label>
+    <input id="tab-2" type="radio" name="tab-group" />
+    <label for="tab-2">{{ t('Register', 'user') }}</label>
+
+    <div class="registration-form tab-content">
         <form action="{% url 'user:registration' %}" method="post">
             {% csrf_token %}
             {{ form|safe }}
             <br/>
-            <button class="button" type="submit">{{ t('Registration', 'user') }}</button>
+            <button class="button" type="submit">{{ t('Register', 'user') }}</button>
         </form>
     </div>
 {% endblock %}

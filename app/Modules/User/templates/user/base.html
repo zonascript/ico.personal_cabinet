@@ -1,1 +1,86 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="ru"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie9 lt-ie8" lang="ru"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie9" lang="ru"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="ru"> <!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    {% block seo %}{{ meta(this) }}{% endblock %}
+    <meta name="author" content="HashStudio">
+    <meta name="robots" content="noindex, nofollow">
+    {% block head %}{% endblock %}
+
+    <meta name="DC.title" content="HashStudio">
+    <meta name="DC.creator" content="HashStudio">
+
+    {% block css %}{% endblock %}
+
+    <link rel="stylesheet" href="/static/dist/css/1.0.0.all.css"/>
+    <script type="application/javascript" src="/static/dist/js/1.0.0.all.js"></script>
+
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="/favicon.png" type="image/png">
+</head>
+<body>
+
+{% include '_statistics.html' %}
+
+<section id="wrapper">
+    <header id="header">
+        <section class="header-inner row">
+            <section class="columns large-12">
+                <section class="logo">
+                    <a class="logo-link" href="/">
+                        <img src="/static/dist/images/main/logo.png" alt=""/>
+                        <span class="logo-text">Ākara</span>
+                    </a>
+                </section>
+            </section>
+        </section>
+    </header>
+    <p class="clear"></p>
+    <section id="main">
+        <section id="content">
+            {% block flash %}
+            {% include "_flash.html" %}
+            {% endblock %}
+
+            {% block main %}
+            <section class="row">
+                <section class="content columns large-12">
+                    {% block heading %}{% endblock %}
+                    {% block content %}{% endblock %}
+                </section>
+            </section>
+            {% endblock %}
+
+            {% block after_content %}{% endblock %}
+
+            <p class="clear"></p>
+        </section>
+    </section>
+    <p id="push"></p>
+</section>
+
+<section id="footer">
+    <section id="footer-inner">
+        <section class="row">
+            <section class="column large-12">
+                <section class="footer-data">
+                    <section class="inline-block about">
+                        <section class="footer-multiline">
+                            {{ param('core.core.sitename') }}
+                        </section>
+                    </section>
+
+                </section>
+            </section>
+        </section>
+    </section>
+</section>
+
+{% block js %}{% endblock %}
+
+</body>
+</html>

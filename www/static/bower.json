@@ -1,7 +1,7 @@
 {
   "name": "foundation-libsass-template",
   "dependencies": {
-    "foundation": "5.4.2",
+    "foundation": "5.5.3",
     "mindy-sass": "*",
     "fancybox": "~2.1.5",
     "jquery.inputmask": "~3.1.0",

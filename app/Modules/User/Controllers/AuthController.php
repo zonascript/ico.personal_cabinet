@@ -5,6 +5,7 @@ namespace Modules\User\Controllers;
 use Mindy\Base\Mindy;
 use Modules\Core\Controllers\FrontendController;
 use Modules\User\Forms\LoginForm;
+use Modules\User\Forms\RegistrationForm;
 use Modules\User\UserModule;
 
 /**
@@ -44,7 +45,8 @@ class AuthController extends FrontendController
         }
 
         echo $this->render('user/login.html', [
-            'form' => $form
+            'form' => $form,
+            'register_form' => new RegistrationForm(),
         ]);
     }
 

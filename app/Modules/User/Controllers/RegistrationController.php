@@ -5,6 +5,7 @@ namespace Modules\User\Controllers;
 use Mindy\Base\Mindy;
 use Modules\Core\Components\ParamsHelper;
 use Modules\Core\Controllers\FrontendController;
+use Modules\User\Forms\LoginForm;
 use Modules\User\Forms\RegistrationForm;
 use Modules\User\Models\User;
 use Modules\User\UserModule;
@@ -35,8 +36,10 @@ class RegistrationController extends FrontendController
             $this->request->redirect($module->registrationRedirectUrl);
         }
 
-        echo $this->render('user/registration.html', [
-            'form' => $form
+        echo $this->render('user/login.html', [
+            'form' => new LoginForm(),
+            'register_form' => $form,
+            'mode' => 'register'
         ]);
     }
 

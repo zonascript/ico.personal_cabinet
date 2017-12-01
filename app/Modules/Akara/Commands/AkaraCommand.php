@@ -13,47 +13,28 @@ use Modules\Akara\Models\Ico;
 use Modules\Akara\Models\Rates;
 use Modules\Akara\Models\Transaction;
 use Modules\Akara\Helpers\BonusHelper;
+use PHPGangsta_GoogleAuthenticator;
 
 
 class AkaraCommand extends ConsoleCommand
 {
     public function actionTest()
     {
-        /*$network = Bitcoin::getNetwork();
-        $privateKey = PrivateKeyFactory::create(true);
-        $publicKey = $privateKey->getPublicKey();
-        echo "Key Info\n";
-        echo " - Compressed? " . (($privateKey->isCompressed() ? 'yes' : 'no')) . "\n";
-        echo "Private key\n";
-        echo " - WIF: " . $privateKey->toWif($network) . "\n";
-        echo " - Hex: " . $privateKey->getHex() . "\n";
-        echo " - Dec: " . gmp_strval($privateKey->getSecret(), 10) . "\n";
-        echo "Public Key\n";
-        echo " - Hex: " . $publicKey->getHex() . "\n";
-        echo " - Hash: " . $publicKey->getPubKeyHash()->getHex() . "\n";
-        echo " - Address: " . $publicKey->getAddress()->getAddress() . "\n";*/
+        $ga = new PHPGangsta_GoogleAuthenticator();
+        $secret = $ga->createSecret();
+        echo "Secret is: ".$secret."\n\n";
 
-        if ($icos = Ico::objects()->filter(
-            [
-                'end_date__gte' => new Expression('now()'),
-                'start_date__lte' => new Expression('now()')
-            ])->all()
-        ) {
-            foreach ($icos as $ico) {
-                foreach ($ico->tokens as $token) {
-                    for($i=0; $i < 300; $i++) {
-                        $coin_address = AddressBase::getAddressEntity($token->coin->code, $token->token);
-                        $a = $coin_address->generateAddress();
-                        echo $token->coin->code . "\n";
-                        echo $a->address . "\n";
-                        echo $a->public . "\n";
-                        echo $a->private . "\n";
-                        echo $a->wif . "\n";
-                    }
+        $qrCodeUrl = $ga->getQRCodeGoogleUrl('Blog', $secret);
+        echo "Google Charts URL for the QR-Code: ".$qrCodeUrl."\n\n";
 
-                    break;
-                }
-            }
+        $oneCode = $ga->getCode($secret);
+        echo "Checking Code '$oneCode' and Secret '$secret':\n";
+
+        $checkResult = $ga->verifyCode($secret, $oneCode, 2);    // 2 = 2*30sec clock tolerance
+        if ($checkResult) {
+            echo 'OK';
+        } else {
+            echo 'FAILED';
         }
 
     }
