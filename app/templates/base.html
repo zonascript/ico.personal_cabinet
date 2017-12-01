@@ -27,24 +27,28 @@
 {% include '_statistics.html' %}
 
 <section id="wrapper">
-    <header id="header">
-        <section class="header-inner row">
-            <section class="columns large-3">
-                <section class="logo">
-                    <a class="logo-link" href="/">
-                        <img src="/static/dist/images/main/logo.png" alt=""/>
-                    </a>
+
+    {% block header %}
+        <header id="header">
+            <section class="header-inner row">
+                <section class="columns large-3">
+                    <section class="logo">
+                        <a class="logo-link" href="/">
+                            <img src="/static/dist/images/main/logo.png" alt=""/>
+                        </a>
+                    </section>
+                </section>
+                <section class="columns large-9">
+                    <div class="menu-holder">
+                        <menu class="menu no-bullet main-menu justify">
+                            {{ get_menu('main-menu')|safe }}
+                        </menu>
+                    </div>
                 </section>
             </section>
-            <section class="columns large-9">
-                <div class="menu-holder">
-                    <menu class="menu no-bullet main-menu justify">
-                        {{ get_menu('main-menu')|safe }}
-                    </menu>
-                </div>
-            </section>
-        </section>
-    </header>
+        </header>
+    {% endblock %}
+
     <p class="clear"></p>
     <section id="main">
         <section id="content">
@@ -82,7 +86,7 @@
                 <section class="footer-data">
                     <section class="inline-block about">
                         <section class="footer-multiline">
-                            {{ param('core.core.sitename') }}
+                            2018 ICO S3Coin. All Rights Reserved.
                         </section>
                     </section>
 
