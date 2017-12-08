@@ -35,6 +35,7 @@ class UserAdmin extends ModelAdmin
             'email',
             'is_staff',
             'is_superuser',
+            'is_2fa',
             'last_login' => AdminDateTimeColumn::className(),
             'created_at'
         ];

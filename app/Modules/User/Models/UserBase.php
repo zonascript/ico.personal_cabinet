@@ -37,6 +37,14 @@ abstract class UserBase extends Model
                 'verboseName' => UserModule::t("Username"),
                 'unique' => true
             ],
+            'f_name' => [
+                'class' => CharField::className(),
+                'verboseName' => UserModule::t("First name"),
+            ],
+            'l_name' => [
+                'class' => CharField::className(),
+                'verboseName' => UserModule::t("Last name"),
+            ],
             "email" => [
                 'class' => EmailField::className(),
                 'verboseName' => UserModule::t("Email"),
@@ -96,7 +104,17 @@ abstract class UserBase extends Model
                 'class' => DateTimeField::className(),
                 'autoNowAdd' => true,
                 'verboseName' => UserModule::t('Created at')
-            ]
+            ],
+            'google_secret' => [
+                'class' => CharField::className(),
+                'verboseName' => UserModule::t('Google secret key'),
+                'null' => true,
+                'default' => null,
+            ],
+            "is_2fa" => [
+                'class' => BooleanField::className(),
+                'verboseName' => UserModule::t("Is two-factor auth"),
+            ],
         ];
     }
 

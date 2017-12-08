@@ -15,12 +15,9 @@
                 <form action="{% url 'user:login' %}" method="post">
                     {% csrf_token %}
                     {{ form|safe }}
-                    <p class="right">
-                        {% if param('user.user.registration') %}
-                        <a class="link" href="{% url 'user:registration' %}">{{ t('Registration', 'user') }}</a>
-                        {% endif %}
+                    <p>
                         {% if param('user.user.recover') %}
-                        <a class="link" href="{% url 'user:recover' %}">{{ t('Lost password?', 'user') }}</a>
+                        <a class="link" href="{% url 'user:recover' %}">{{ t('Forgot password?', 'user') }}</a>
                         {% endif %}
                     </p>
                     <br/>

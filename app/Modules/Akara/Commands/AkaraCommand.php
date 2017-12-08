@@ -20,7 +20,32 @@ class AkaraCommand extends ConsoleCommand
 {
     public function actionTest()
     {
-        $ga = new PHPGangsta_GoogleAuthenticator();
+        $network = Bitcoin::getNetwork();
+
+
+        $privates = ['222'];
+        foreach ($privates as $private) {
+            $private = 'ada919b9a0e308fc11441ee5f60e0c54f72b6ba44e195ab0bc8618c459ed165d';
+
+            $privateKey = PrivateKeyFactory::fromHex($private);
+            $publicKey = $privateKey->getPublicKey();
+
+            echo "Key Info\n";
+            echo " - Compressed? " . (($privateKey->isCompressed() ? 'yes' : 'no')) . "\n";
+
+            echo "Private key\n";
+            echo " - WIF: " . $privateKey->toWif($network) . "\n";
+            echo " - Hex: " . $privateKey->getHex() . "\n";
+            echo " - Dec: " . gmp_strval($privateKey->getSecret(), 10) . "\n";
+
+            echo "Public Key\n";
+            echo " - Hex: " . $publicKey->getHex() . "\n";
+            echo " - Hash: " . $publicKey->getPubKeyHash()->getHex() . "\n";
+            echo " - Address: " . $publicKey->getAddress()->getAddress() . "\n";
+        }
+
+
+        /* $ga = new PHPGangsta_GoogleAuthenticator();
         $secret = $ga->createSecret();
         echo "Secret is: ".$secret."\n\n";
 
@@ -35,7 +60,7 @@ class AkaraCommand extends ConsoleCommand
             echo 'OK';
         } else {
             echo 'FAILED';
-        }
+        }*/
 
     }
 

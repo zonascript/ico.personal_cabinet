@@ -32,5 +32,9 @@ return [
     '/login' => [
         'name'     => 'login',
         'callback' => '\Modules\User\Controllers\AuthController:login'
+    ],
+    '/settings' => [
+        'name'     => 'settings',
+        'callback' => '\Modules\User\Controllers\UserController:settings'
     ]
 ];

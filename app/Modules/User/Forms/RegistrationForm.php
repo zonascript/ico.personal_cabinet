@@ -175,7 +175,7 @@ class RegistrationForm extends Form
 
     public function save()
     {
-        $model = User::objects()->createUser($this->username->getValue(), $this->password->getValue(), $this->email->getValue());
+        $model = User::objects()->createUser($this->email->getValue(), $this->password->getValue(), $this->email->getValue());
         if ($model->hasErrors() === false) {
             return $model;
         }

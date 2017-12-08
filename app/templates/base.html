@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="ru"> <![endif]-->
-<!--[if IE 7]> <html class="no-js lt-ie9 lt-ie8" lang="ru"> <![endif]-->
-<!--[if IE 8]> <html class="no-js lt-ie9" lang="ru"> <![endif]-->
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie9" lang="en"> <![endif]-->
 <!--[if gt IE 8]><!-->
-<html class="no-js" lang="ru"> <!--<![endif]-->
+<html class="no-js" lang="en"> <!--<![endif]-->
 <head>
     <meta charset="utf-8">
     {% block seo %}{{ meta(this) }}{% endblock %}
-    <meta name="author" content="HashStudio">
+    <meta name="author" content="">
     <meta name="robots" content="noindex, nofollow">
     {% block head %}{% endblock %}
 
@@ -26,31 +26,42 @@
 
 {% include '_statistics.html' %}
 
-<section id="wrapper">
-
-    {% block header %}
+<section id="wrapper" class="row">
+    {% block sidebar %}
+    <aside id="sidebar" class="columns large-1">
+        <section class="columns large-12">
+            <section class="logo">
+                <a class="logo-link" href="/">
+                    <img src="/static/dist/images/main/logo.png" alt=""/>
+                    <span>Ākara</span>
+                </a>
+            </section>
+            <div class="menu-holder">
+                <menu class="menu no-bullet main-menu justify">
+                    {{ get_menu('main-menu')|safe }}
+                </menu>
+            </div>
+        </section>
+    </aside>
+    {% endblock %}
+    <section id="main" class="columns large-11">
+        {% block header %}
         <header id="header">
-            <section class="header-inner row">
-                <section class="columns large-3">
-                    <section class="logo">
-                        <a class="logo-link" href="/">
-                            <img src="/static/dist/images/main/logo.png" alt=""/>
-                        </a>
-                    </section>
+            <section class="row">
+                <section class="columns large-6">
+                    <div class="email">{{ user.email }}</div>
+                    <div class="name">{{ user.f_name }} {{ user.l_name }}</div>
                 </section>
-                <section class="columns large-9">
-                    <div class="menu-holder">
-                        <menu class="menu no-bullet main-menu justify">
-                            {{ get_menu('main-menu')|safe }}
-                        </menu>
-                    </div>
+                <section class="columns large-4">
+                    <div class="contributed">You contributed: 0.54 BTC</div>
+                    <div class="balance">Balance</div>
+                </section>
+                <section class="columns large-1">
+                    <a href="{% url 'user:logout' %}" class="logout">Log out</a>
                 </section>
             </section>
         </header>
-    {% endblock %}
-
-    <p class="clear"></p>
-    <section id="main">
+        {% endblock %}
         <section id="content">
             {% block flash %}
                 {% include "_flash.html" %}

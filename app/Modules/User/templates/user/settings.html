@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <section class="row">
+        <section class="content columns large-4">
+            <div class="profile">Profile</div>
+        </section>
+        <section class="content columns large-8">
+            <form action="{% url 'user:settings' key %}" method="post">
+                {% csrf_token %}
+                {{ profile_form|safe }}
+                <input type="hidden" name="key" value="profile_form"/>
+                <button type="submit">{{ t('Save information', 'user') }}</button>
+            </form>
+        </section>
+    </section>
+    <section class="row">
+        <section class="content columns large-4">
+            <div class="profile">Change password</div>
+        </section>
+        <section class="content columns large-8">
+            <form action="{% url 'user:settings' key %}" method="post">
+                {% csrf_token %}
+                {{ pass_form|safe }}
+                <input type="hidden" name="key" value="pass_form"/>
+                <button type="submit">{{ t('Change password', 'user') }}</button>
+            </form>
+        </section>
+    </section>
+    <section class="row">
+        <section class="content columns large-4">
+            <div class="profile">Two-Factor Auth</div>
+        </section>
+        <section class="content columns large-8">
+            <form action="{% url 'user:settings' key %}" method="post">
+                {% csrf_token %}
+
+                {% if not model.is_2fa %}
+
+                    <div class="auth">
+                        <p>Add two-factor authentification method for account login.</p>
+                        <p>Google Authenticator in TOTP mode will be used</p>
+                    </div>
+                    <div class="secret">
+                        <span class="title"></span>
+                        <img class="qr" src="{{ google_secret.getQRCodeGoogleUrl('ICO', model.google_secret) }}" />
+                        <span class="key">{{ model.google_secret }}</span>
+                    </div>
+                    {{ google_auth|safe }}
+                    <button type="submit">{{ t('Enable', 'user') }}</button>
+                    <input type="hidden" name="mode" value="enable"/>
+
+                {% else %}
+
+                    {{ google_auth|safe }}
+                    <button type="submit">{{ t('Disable', 'user') }}</button>
+                    <input type="hidden" name="mode" value="disable"/>
+
+                {% endif %}
+
+                <input type="hidden" name="key" value="google_auth_form"/>
+            </form>
+        </section>
+    </section>
+{% endblock %}

@@ -30,7 +30,13 @@ class AuthController extends FrontendController
 
         $this->addBreadcrumb(UserModule::t("Login"));
 
-        $form = new LoginForm();
+        $exclude = ['exclude' => ['google_code']];
+        if ($this->request->isPost && isset($this->request->post->toArray()['LoginForm']['google_code'])) {
+            $exclude = [];
+        }
+
+        $form = new LoginForm($exclude);
+
         if ($this->request->isPost && $form->populate($_POST)->isValid() && $form->login()) {
             $this->redirectNext();
 
@@ -41,6 +47,10 @@ class AuthController extends FrontendController
                 ]);
             } else {
                 $this->request->redirect($module->loginRedirectUrl);
+            }
+        } else {
+            if ($form->hasErrors('google_code') && $exclude) {
+                $form = (new LoginForm())->setAttributes($form->getAttributes());
             }
         }
 

@@ -20,7 +20,7 @@ class UserForm extends ModelForm
     public function getFieldsets()
     {
         return [
-            UserModule::t('Main information') => ['username', 'email', 'is_staff', 'is_superuser', 'is_active'],
+            UserModule::t('Main information') => ['username', 'email', 'is_staff', 'is_superuser', 'is_active', 'is_2fa', 'google_secret'],
             UserModule::t('Extra information') => ['groups', 'permissions'],
         ];
     }

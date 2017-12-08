@@ -51,21 +51,30 @@ class ChangePasswordForm extends Form
         $fields = [
             'password_current' => [
                 'class' => PasswordField::className(),
-                'label' => UserModule::t('Current password')
+                'label' => UserModule::t('Old Password'),
+                'html' => [
+                    'placeholder' => UserModule::t('Old Password')
+                ]
             ],
             'password_create' => [
                 'class' => PasswordField::className(),
                 'validators' => [
-                    new MinLengthValidator(6)
+                    new MinLengthValidator(8)
                 ],
-                'label' => UserModule::t('Password')
+                'label' => UserModule::t('New Password'),
+                'html' => [
+                    'placeholder' => UserModule::t('New password')
+                ]
             ],
             'password_repeat' => [
                 'class' => PasswordField::className(),
                 'validators' => [
-                    new MinLengthValidator(6)
+                    new MinLengthValidator(8)
                 ],
-                'label' => UserModule::t('Password repeat'),
+                'label' => UserModule::t('Confirm Password'),
+                'html' => [
+                    'placeholder' => UserModule::t('Password Confirmation')
+                ],
                 'hint' => UserModule::t('Please repeat your password')
             ]
         ];

@@ -7,6 +7,7 @@ use Mindy\Helper\Password;
 use Mindy\Orm\Model;
 use Modules\Core\Components\ParamsHelper;
 use Modules\User\Models\User;
+use PHPGangsta_GoogleAuthenticator;
 
 /**
  * @DEPRECATED
@@ -25,6 +26,11 @@ class UserIdentity extends BaseUserIdentity
     public $password;
 
     /**
+     * @var string google_code
+     */
+    public $google_code;
+
+    /**
      * @var \Modules\User\Models\User
      */
     private $_model;
@@ -36,16 +42,18 @@ class UserIdentity extends BaseUserIdentity
 
     const ERROR_EMAIL_INVALID = 3;
     const ERROR_INACTIVE = 4;
+    const ERROR_GOOGLE_CODE_INVALID = 5;
 
     /**
      * Constructor.
      * @param string $username username
      * @param string $password password
      */
-    public function __construct($username, $password)
+    public function __construct($username, $password, $google_code)
     {
         $this->username = $username;
         $this->password = $password;
+        $this->google_code = $google_code;
     }
 
     /**
@@ -69,6 +77,8 @@ class UserIdentity extends BaseUserIdentity
             ]);
         }
 
+        $ga = new PHPGangsta_GoogleAuthenticator();
+
         if ($model === null) {
             if (strpos($this->username, "@")) {
                 $this->errorCode = self::ERROR_EMAIL_INVALID;
@@ -79,6 +89,8 @@ class UserIdentity extends BaseUserIdentity
             $this->errorCode = self::ERROR_INACTIVE;
         } else if (!$auth->getPasswordHasher($model->hash_type)->verifyPassword($this->password, $model->password)) {
             $this->errorCode = self::ERROR_PASSWORD_INVALID;
+        } else if ($model->is_2fa && $this->google_code != $ga->getCode($model->google_secret)) {
+            $this->errorCode = self::ERROR_GOOGLE_CODE_INVALID;
         } else {
             $this->errorCode = self::ERROR_NONE;
 
